@@ -6,7 +6,7 @@ import store from "../store";
 
 export const getProject = () => (dispatch, getState) => {
     axios
-        .get("https://bluescape.shotgunstudio.com/api/v1/entity/projects",tokenConfig(getState))
+        .get("https://bluescape.shotgunstudio.com/api/v1/entity/projects?fields=cached_display_name",tokenConfig(getState))
         .then(res => {
             dispatch({
                 type: GET_PROJECT,

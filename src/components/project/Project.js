@@ -24,11 +24,11 @@ class Project extends Component {
                             {this.props.project.map((plData, i )=> (
                                 <div className="card1" key={plData.id}>
                                     <div className="card4">
-                                        {plData.type + ' ' + plData.id}
+                                        {plData.attributes.cached_display_name}
                                         <br />
                                         <Link to={{
                                             pathname: '/playlist/',
-                                        }} className="link"><button onClick={()=>{this.props.getProjectPlaylist( plData.id )}} className={"btn-primary rounded-lg"}>Submit</button></Link>
+                                        }} className="link"><button onClick={()=>{this.props.getProjectPlaylist( plData.id )}} className={"btn-primary rounded-lg float-left"}>Submit</button></Link>
                                     </div>
                                 </div>
                             ))}
