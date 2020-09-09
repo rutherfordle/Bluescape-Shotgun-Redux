@@ -1,7 +1,7 @@
 import axios from "axios";
 import {tokenConfig,loadUser} from "./auth"
 import store from "../store";
-import { returnErrors } from "./messages";
+import {createMessage, returnErrors} from "./messages";
 
 import {GET_PLAYLIST, GET_PLAYLIST_IMAGES, REMOVE_PLAYLIST} from "./types";
 
@@ -24,7 +24,7 @@ export const getPlaylist = () => (dispatch, getState) => {
         })
         .catch(err => {
             (err.response.status === 401) ? store.dispatch(loadUser()):''
-            dispatch(returnErrors(err.response.data.errors[0].title, err.response.status))
+            dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
         });
 };
 
@@ -40,7 +40,7 @@ export const getPlaylistImages = (id,name) => (dispatch, getState) => {
         })
         .catch(err => {
             (err.response.status === 401) ? store.dispatch(loadUser()):''
-            dispatch(returnErrors(err.response.data.errors[0].title, err.response.status))
+            dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
         });
 };
 

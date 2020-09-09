@@ -1,7 +1,7 @@
 import axios from "axios";
 import {tokenConfig,loadUser} from "./auth"
 import {GET_PROJECT, PLAYLIST_SELECT} from "./types";
-import { returnErrors } from "./messages";
+import {createMessage, returnErrors} from "./messages";
 import store from "../store";
 
 export const getProject = () => (dispatch, getState) => {
@@ -15,7 +15,7 @@ export const getProject = () => (dispatch, getState) => {
         })
         .catch(err => {
             (err.response.status === 401) ? store.dispatch(loadUser()):''
-            dispatch(returnErrors(err.response.data.errors[0].title, err.response.status))
+            dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
         });
 };
 
