@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import {getPlaylist, getPlaylistImages} from "../../actions/playlist";
 import {getProjectPlaylist} from "../../actions/project";
-import {sendToBlue} from "../../actions/sendToBlue";
+import {sendToBlue,imageToUpload} from "../../actions/sendToBlue";
 
 
 class ViewImages extends Component {
@@ -18,25 +18,19 @@ class ViewImages extends Component {
             width:img.naturalWidth,source:img.src}
         this.state.dimensions.push(value)
         this.state.counter++
-        console.log('onImgLoad', img);
     }
+
     sendToBluePlaylist = () => {
         console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
         console.log('ViewImages.result.user.name= ',this.props.playlistImages[0].relationships.user.data.name)
         console.log('ViewImages.result.images= ',this.props.playlistImages[0].attributes.image)
     }
 
-    sendToBlue = (index) => {
-        this.props.sendToBlue()
+    submitImageUpload = (index) => {
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
-        console.log('component.viewImage.sendToBlue.dimensions',this.state.dimensions);
         const image = this.state.dimensions.find( el => el.source == selectedImage)
-        console.log('Image.height', image.height);
-        console.log('Image.width', image.width);
-        console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
-        console.log('ViewImages.result.user.name= ',index.relationships.user.data.name)
-        console.log('ViewImages.result.images= ',(selectedImage))
-
+        this.props.imageToUpload(image)
+        this.props.sendToBlue(index)
     }
 
     render() {
@@ -59,7 +53,7 @@ class ViewImages extends Component {
                         <h2>Tags:</h2>
                         {val2.relationships.tags.data.map(val2=><React.Fragment>{val2.name}<br/></React.Fragment>)}
                         <br />
-                        <button id="indButton" onClick={() => this.sendToBlue(val2)} className="btn-primary" type="button" name="index" >Send image to Bluescape</button>
+                        <button id="indButton" onClick={() => this.submitImageUpload(val2)} className="btn-primary" type="button" name="index" >Send image to Bluescape</button>
                     </div>
                     )
                 )}
@@ -77,5 +71,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue}
+    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue, imageToUpload}
 )(ViewImages);

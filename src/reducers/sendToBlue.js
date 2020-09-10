@@ -1,6 +1,8 @@
-import { SEND_TO_BLUE} from "../actions/types";
+import {ON_IMAGE_LOAD, SEND_TO_BLUE} from "../actions/types";
 
-const initialState = {};
+const initialState = {
+  onImgLoad:''
+};
 
 export default function(state = initialState, action) {
   switch (action.type) {
@@ -8,5 +10,10 @@ export default function(state = initialState, action) {
       return (state = action.payload);
     default:
       return state;
+    case ON_IMAGE_LOAD:
+      return {
+        ...state,
+        uploadableImage:action.img
+      };
   }
 }

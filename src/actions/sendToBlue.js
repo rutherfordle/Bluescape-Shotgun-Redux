@@ -4,20 +4,22 @@ import store from "../store";
 //use messages here to display errors if they occur (like bad auth token)
 import {createMessage, returnErrors} from "./messages";
 
-import {SEND_TO_BLUE} from "./types";
+import {ON_IMAGE_LOAD, ON_IMG_LOAD, SEND_TO_BLUE} from "./types";
 
-// export const onImgLoad = ({target:img}) => {
-//     /*this.setState({dimensions{height:img.naturalHeight,
-//             width:img.naturalWidth}});*/
-//     const value = {height:img.naturalHeight,
-//         width:img.naturalWidth,source:img.src}
-//     this.state.dimensions.push(value)
-//     this.state.counter++
-//     console.log('onImgLoad', img);
-// }
+export const imageToUpload = (img) => (dispatch, getState) => {
+    dispatch({
+        type: ON_IMAGE_LOAD,
+        img:img
+    });
+
+}
 
 export const sendToBlue = (index) => (dispatch, getState) => {
-    // const getPlaylistID = getState().project.getPlaylistID;
+    const getImageToUpload = getState().sendToBlue.uploadableImage;
+    const getPlaylistNameSelected = getState().playlist.playlistNameSelected;
+    console.log('getPlaylistNameSelected', getPlaylistNameSelected);
+    console.log('getImageToUpload', getImageToUpload);
+    console.log('index.relationships name', index.relationships.user.data.name);
     // let playlistID = '';
     // if (getPlaylistID) {
     //     playlistID = 'filter[project.Project.id]='+ getPlaylistID
