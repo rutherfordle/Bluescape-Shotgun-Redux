@@ -16,38 +16,19 @@ export const imageToUpload = (img) => (dispatch, getState) => {
 }
 
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
-const workspaceUID = '48G0XmCfFbzTZ4g8peN-'
+const workspaceUID = 'cjsCO31iGlyyOMEpqYpI'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
 
-export const sendToBlue = (index) => ( dispatch, getState) => {
+export const sendToBlue = (index) => async ( dispatch, getState) => {
     const getImageToUpload = getState().sendToBlue.uploadableImage;
     console.log('sendToBlue!!!!')
-    // createCanvas( dispatch, getState)
 
-    const canvasReturn = createCanvas( dispatch, getState);
-    this.setState({token : canvasReturn }, () => { 
-        console.log('GOT IT BABYQ!!!!Q')
-        // service.logout(authToken).then( this.Auth.logout());
-    })
-
-
-    // const sendData = val => {
-    //     return dispatch => {
-    //       return createCanvas(dispatch, getState.then(
-    //         val2 => dispatch(uploadImage(dispatch, getState)),
-    //       ));
-    //     };
-    //   }
-
-    // createCanvas (dispatch, getState).then(()=>{
-    //     uploadImage(dispatch, getState);
-    // })
-
+    await createCanvas( dispatch, getState);
     // dispatch(uploadImage(dispatch, getState))
     console.log('after create canvas!!!!!!!')
-    //uploadImage(dispatch, getState)
+    uploadImage(dispatch, getState)
 };
 
 export const sendToBluePlaylist = () => (dispatch, getState) => {
@@ -66,7 +47,7 @@ export const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-export const createCanvas = (dispatch, getState) => {
+export const createCanvas = async (dispatch, getState) => {
     console.log('createCanvas')
     const getPlaylistNameSelected = getState().playlist.playlistNameSelected;
     console.log('actions.sendToBlue.getPlaylistNameSelected = ', getPlaylistNameSelected);
@@ -98,7 +79,8 @@ export const createCanvas = (dispatch, getState) => {
           data : data
         };
 
-        axios(config)
+        
+        return axios(config)
             .then( res => {
                 let canvasUID = JSON.stringify(res.data.canvas.id)
                 console.log('canvasUID = ' + canvasUID);
