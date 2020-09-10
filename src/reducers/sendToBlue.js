@@ -1,8 +1,9 @@
-import {ON_IMAGE_LOAD, LOADING_BS} from "../actions/types";
+import {ON_IMAGE_LOAD, LOADING_BS, UPLOAD_IMAGE} from "../actions/types";
 
 const initialState = {
   onImgLoad:'',
-  canvasUID:''
+  canvasUID:'',
+  imagePayload:''
 };
 
 export default function(state = initialState, action) {
@@ -17,6 +18,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         uploadableImage:action.img
+      };
+
+      case UPLOAD_IMAGE:
+      return {
+        ...state,
+        imagePayload:action.payload
       };
 
     default:

@@ -1,10 +1,11 @@
 import axios from "axios";
 import {tokenConfig,loadUser} from "./auth"
 import store from "../store";
+import thunk from "redux-thunk";
 //use messages here to display errors if they occur (like bad auth token)
 import {createMessage, returnErrors} from "./messages";
 
-import {ON_IMAGE_LOAD, LOADING_BS} from "./types";
+import {ON_IMAGE_LOAD, LOADING_BS, UPLOAD_IMAGE} from "./types";
 
 export const imageToUpload = (img) => (dispatch, getState) => {
     dispatch({
@@ -20,69 +21,33 @@ const workspaceUID = '48G0XmCfFbzTZ4g8peN-'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
 
-export const sendToBlue = (index) => (dispatch, getState) => {
+export const sendToBlue = (index) => ( dispatch, getState) => {
     const getImageToUpload = getState().sendToBlue.uploadableImage;
-    const getPlaylistNameSelected = getState().playlist.playlistNameSelected;
-    console.log('actions.sendToBlue.getPlaylistNameSelected = ', getPlaylistNameSelected);
-    console.log('actions.sendToBlue.getImageToUpload = ', getImageToUpload.source);
-    console.log('actions.sendToBlue.index.relationships.name =', index.relationships.user.data.name);
+    console.log('sendToBlue!!!!')
+    // createCanvas( dispatch, getState)
 
-    // const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
-    //const selectedImage = this.state.result[index].attributes.sg_uploaded_movie_image.url
-    // console.log('dimensions',this.state.dimensions);
-    
-    const ts = new Date().toLocaleDateString()
-    
-    //date | playlist name | user
-    const canvasName = ts  + ' | ' + getPlaylistNameSelected + ' | ' + index.relationships.user.data.name
-    console.log('sendToBlue:canvasName = ' + canvasName)
-    // this.uploadImageFetch( selectedImage)
-    // createCanvas( canvasName)
-    // this.uploadImage( selectedImage)    
+    const canvasReturn = createCanvas( dispatch, getState);
+    this.setState({token : canvasReturn }, () => { 
+        console.log('GOT IT BABYQ!!!!Q')
+        // service.logout(authToken).then( this.Auth.logout());
+    })
 
 
-    console.log('createCanvas.canvasName = ' + canvasName)
-    
-    const rndCoord = 5000
-    var data = JSON.stringify({
-                            "name":canvasName,
-                            "width":1000,
-                            "height":1000,
-                            'x':getRandomInt(rndCoord),
-                            'y':getRandomInt(rndCoord)
-                        });
+    // const sendData = val => {
+    //     return dispatch => {
+    //       return createCanvas(dispatch, getState.then(
+    //         val2 => dispatch(uploadImage(dispatch, getState)),
+    //       ));
+    //     };
+    //   }
 
-    var config = {
-        method: 'post',
-        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/canvas',
-        headers: { 
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-          },
-          data : data
-        };
+    // createCanvas (dispatch, getState).then(()=>{
+    //     uploadImage(dispatch, getState);
+    // })
 
-        axios(config)
-            .then( res => {
-                console.log('test!!!!!!!')
-                let canvasUID = JSON.stringify(res.data.canvas.id)
-                console.log('canvasUID = ' + canvasUID);
-                // console.log('sendToBlue.image = ' + getState().sendToBlue.uploadableImage.source)
-                
-                // this.setState ({"canvasUID": canvasUID}),uploadImage(getState().sendToBlue.uploadableImage.source)
-
-                dispatch({
-                    type: LOADING_BS,
-                    payload: res.data.canvas.id
-                });
-                console.log('actions.sendToBlue.canvasUID = ' + getState().sendToBlue.canvasUID)
-                dispatch(createMessage({tokenReset:"creating canvas"}))
-                uploadImage()
-        })
-        .catch(err => {
-            (err.res.status === 401) ? store.dispatch(loadUser()):''
-            dispatch(createMessage({tokenReset:"canvas create error"}))
-        });
+    // dispatch(uploadImage(dispatch, getState))
+    console.log('after create canvas!!!!!!!')
+    //uploadImage(dispatch, getState)
 };
 
 export const sendToBluePlaylist = () => (dispatch, getState) => {
@@ -101,7 +66,61 @@ export const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-export const uploadImage = () => {
+export const createCanvas = (dispatch, getState) => {
+    console.log('createCanvas')
+    const getPlaylistNameSelected = getState().playlist.playlistNameSelected;
+    console.log('actions.sendToBlue.getPlaylistNameSelected = ', getPlaylistNameSelected);
+    // console.log('actions.sendToBlue.getImageToUpload = ', getImageToUpload.source);
+    // console.log('actions.sendToBlue.index.relationships.name =', index.relationships.user.data.name);
+    
+    const ts = new Date().toLocaleDateString()
+    
+    //date | playlist name | user
+    const canvasName = ts  + ' | ' + getPlaylistNameSelected + ' | ' + getState().playlist.playlistCreatedBy
+    console.log('sendToBlue:canvasName = ' + canvasName)
+    
+    const rndCoord = 5000
+    var data = JSON.stringify({
+                            "name":canvasName,
+                            "width":2000,
+                            "height":2000,
+                            'x':getRandomInt(rndCoord),
+                            'y':getRandomInt(rndCoord)
+                        });
+
+    var config = {
+        method: 'post',
+        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/canvas',
+        headers: { 
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+            .then( res => {
+                let canvasUID = JSON.stringify(res.data.canvas.id)
+                console.log('canvasUID = ' + canvasUID);
+                // console.log('sendToBlue.image = ' + getState().sendToBlue.uploadableImage.source)
+                
+                // this.setState ({"canvasUID": canvasUID}),uploadImage(getState().sendToBlue.uploadableImage.source)
+
+                dispatch({
+                    type: LOADING_BS,
+                    payload: res.data.canvas.id
+                });
+                console.log('actions.sendToBlue.canvasUID = ' + getState().sendToBlue.canvasUID)
+                dispatch(createMessage({tokenReset:"creating canvas"}))
+               // uploadImage()
+        })
+        .catch(err => {
+            (err.res.status === 401) ? store.dispatch(loadUser()):''
+            dispatch(createMessage({tokenReset:"canvas create error"}))
+        });
+}
+
+export const uploadImage = (dispatch, getState) => {
 
     console.log("************** uploadImage.store = ", store.getState().sendToBlue)
     const sendBlueObj = store.getState().sendToBlue
@@ -129,55 +148,15 @@ export const uploadImage = () => {
 
         axios(config)
             .then(function (res) {
-            console.log(JSON.stringify(res.data));
+                dispatch({
+                    type: UPLOAD_IMAGE,
+                    payload: res.data
+                });
+                console.log(JSON.stringify(res.data));
         })
         .catch(function (error) {
             console.log(error);
     });
-}
-
-export const createCanvas = (canvasName) => dispatch => {
-    console.log('createCanvas.canvasName = ' + canvasName)
-    
-    const rndCoord = 5000
-    var data = JSON.stringify({
-                            "name":canvasName,
-                            "width":1000,
-                            "height":1000,
-                            'x':getRandomInt(rndCoord),
-                            'y':getRandomInt(rndCoord)
-                        });
-
-    var config = {
-        method: 'post',
-        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/canvas',
-        headers: { 
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-          },
-          data : data
-        };
-
-        axios(config)
-            .then( res => {
-                console.log('test!!!!!!!')
-                let canvasUID = JSON.stringify(res.data.canvas.id)
-                console.log('canvasUID = ' + canvasUID);
-                // console.log('sendToBlue.image = ' + getState().sendToBlue.uploadableImage.source)
-                
-                // this.setState ({"canvasUID": canvasUID}),uploadImage(getState().sendToBlue.uploadableImage.source)
-
-                dispatch({
-                    type: LOADING_BS,
-                    payload: res.data.canvas.id
-                });
-                console.log('actions.sendToBlue.canvasUID = ' + getState().sendToBlue.canvasUID)
-                //dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
-        })
-        .catch(err => {
-            //(err.res.status === 401) ? store.dispatch(loadUser()):''
-            //dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
-        });
 }
 
 export const getPlaylistImages = (id,name) => (dispatch, getState) => {
