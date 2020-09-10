@@ -35,7 +35,7 @@ class Playlist extends Component {
                                         className="btn btn-primary card4 rounded-lg"
                                         type="button"
                                         name="index"
-                                        onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code)}}
+                                        onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code, plData.relationships.created_by.data.name)}}
                                     >Submit</button>
                                 </div>
                             ))}

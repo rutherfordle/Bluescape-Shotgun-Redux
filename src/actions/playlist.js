@@ -28,14 +28,15 @@ export const getPlaylist = () => (dispatch, getState) => {
         });
 };
 
-export const getPlaylistImages = (id,name) => (dispatch, getState) => {
+export const getPlaylistImages = (id,name,createdBy) => (dispatch, getState) => {
     axios
         .get('https://bluescape.shotgunstudio.com/api/v1/entity/Version/?filter[playlists.Playlist.id]=' + id + '&fields=sg_uploaded_movie_image,cached_display_name,tags,user,image',tokenConfig(getState))
         .then(res => {
             dispatch({
                 type: GET_PLAYLIST_IMAGES,
                 payload: res.data.data,
-                name:name
+                name:name,
+                createdBy:createdBy
             });
         })
         .catch(err => {

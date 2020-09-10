@@ -5,7 +5,8 @@ import {
 const initialState = {
     playlist: [],
     playlistImages: [],
-    playlistNameSelected:''
+    playlistNameSelected:'',
+    playlistCreatedBy:''
 };
 
 export default function (state = initialState, action) {
@@ -19,7 +20,8 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 playlistImages: action.payload,
-                playlistNameSelected:action.name
+                playlistNameSelected:action.name,
+                playlistCreatedBy:action.createdBy
             };
         case REMOVE_PLAYLIST:
             return {
