@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import {getPlaylist, getPlaylistImages} from "../../actions/playlist";
 import {getProjectPlaylist} from "../../actions/project";
-import {sendToBlue,imageToUpload} from "../../actions/sendToBlue";
+import {sendToBlue,imageToUpload,sendToBluePlaylist} from "../../actions/sendToBlue";
+import store from "../../store";
 
 
 class ViewImages extends Component {
@@ -20,16 +21,29 @@ class ViewImages extends Component {
         this.state.counter++
     }
 
-    sendToBluePlaylist = () => {
+    sendToBluePlaylistBroker = () => {
         console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
         console.log('ViewImages.result.user.name= ',this.props.playlistImages[0].relationships.user.data.name)
         console.log('ViewImages.result.images= ',this.props.playlistImages[0].attributes.image)
+        this.props.playlistImages.map((val2, i) =>  { 
+            //let selectedImage = (val2.attributes.sg_uploaded_movie_image)? (val2.attributes.sg_uploaded_movie_image.url) : val2.attributes.image
+            //this.props.imageToUpload(selectedImage)
+            this.processImageUpload(val2)
+        })
+
+        // this.props.sendToBluePlaylist()
+        store.dispatch(sendToBluePlaylist())
     }
 
-    submitImageUpload = (index) => {
+    processImageUpload = (index) => {
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
         const image = this.state.dimensions.find( el => el.source == selectedImage)
         this.props.imageToUpload(image)
+        // this.props.sendToBlue(index)
+    }
+    
+    submitImageUpload = (index) => {
+        this.processImageUpload(index)
         this.props.sendToBlue(index)
     }
 
@@ -38,7 +52,7 @@ class ViewImages extends Component {
         if(this.props.playlistImages.length === 0) {
             uploadable = <div className="card4"> No images </div>
         }else{
-            uploadable = <button id="appButton" onClick={this.sendToBluePlaylist} className="btn-primary rounded-lg" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
+            uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
         }
         return(
             <div>
@@ -71,5 +85,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue, imageToUpload}
+    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue, imageToUpload, sendToBluePlaylist}
 )(ViewImages);

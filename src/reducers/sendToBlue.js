@@ -1,19 +1,25 @@
-import {ON_IMAGE_LOAD, SEND_TO_BLUE} from "../actions/types";
+import {ON_IMAGE_LOAD, LOADING_BS} from "../actions/types";
 
 const initialState = {
-  onImgLoad:''
+  onImgLoad:'',
+  canvasUID:''
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case SEND_TO_BLUE:
-      return (state = action.payload);
-    default:
-      return state;
+    case LOADING_BS:
+      return {
+        ...state,
+        canvasUID:action.payload
+      };
+  
     case ON_IMAGE_LOAD:
       return {
         ...state,
         uploadableImage:action.img
       };
+
+    default:
+      return state;
   }
 }

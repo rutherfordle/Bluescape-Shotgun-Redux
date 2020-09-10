@@ -13,3 +13,4 @@ export const GET_PLAYLIST_IMAGES = "GET_PLAYLIST_IMAGES";
 export const REMOVE_PLAYLIST = "REMOVE_PLAYLIST";
 export const SEND_TO_BLUE = "SEND_TO_BLUE";
 export const ON_IMAGE_LOAD = "ON_IMAGE_LOAD";
+export const LOADING_BS = "LOADING_BS";
