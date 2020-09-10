@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import {getPlaylist, getPlaylistImages} from "../../actions/playlist";
 import {getProjectPlaylist} from "../../actions/project";
+import {sendToBlue} from "../../actions/sendToBlue";
+
 
 class ViewImages extends Component {
     constructor(props) {
@@ -25,8 +27,9 @@ class ViewImages extends Component {
     }
 
     sendToBlue = (index) => {
+        this.props.sendToBlue()
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
-        console.log('dimensions',this.state.dimensions);
+        console.log('component.viewImage.sendToBlue.dimensions',this.state.dimensions);
         const image = this.state.dimensions.find( el => el.source == selectedImage)
         console.log('Image.height', image.height);
         console.log('Image.width', image.width);
@@ -74,5 +77,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getPlaylist, getProjectPlaylist, getPlaylistImages}
+    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue}
 )(ViewImages);
