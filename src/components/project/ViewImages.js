@@ -10,17 +10,19 @@ class ViewImages extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dimensions: [],
+            playlistImages: [],
         }
     };
 
+    //get the width and height of images as they are loaded:
     onImgLoad = ({target:img}) => {
         const value = {height:img.naturalHeight,
-            width:img.naturalWidth,source:img.src}
-        this.state.dimensions.push(value)
+        width:img.naturalWidth,source:img.src}
+        this.state.playlistImages.push(value)
         this.state.counter++
     }
 
+    //handle all images for playlist:
     sendToBluePlaylistBroker = () => {
         console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
         console.log('ViewImages.result.user.name= ',this.props.playlistImages[0].relationships.user.data.name)
@@ -34,17 +36,18 @@ class ViewImages extends Component {
         // this.props.sendToBluePlaylist()
         store.dispatch(sendToBluePlaylist())
     }
-
-    processImageUpload = (index) => {
-        const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
-        const image = this.state.dimensions.find( el => el.source == selectedImage)
-        this.props.imageToUpload(image)
-        // this.props.sendToBlue(index)
-    }
     
+    //called for one image only:
     submitImageUpload = (index) => {
         this.processImageUpload(index)
         this.props.sendToBlue(index)
+    }
+
+    processImageUpload = (index) => {
+        const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
+        const image = this.state.playlistImages.find( el => el.source == selectedImage)
+
+        this.props.imageToUpload(image, this.state.playlistImages)
     }
 
     render() {
@@ -61,7 +64,8 @@ class ViewImages extends Component {
                 </div>
                 <div className="card5">
                 {this.props.playlistImages.map((val2, i) =>  (
-                    <div key={i}><h2>{val2.attributes.cached_display_name}</h2>
+                    <div key={i}>
+                        <h2>{val2.attributes.cached_display_name}</h2>
                         <img width="100%" onLoad={this.onImgLoad} src={val2.attributes.sg_uploaded_movie_image ? val2.attributes.sg_uploaded_movie_image.url: val2.attributes.image}/>
                         <br />
                         <h2>Tags:</h2>

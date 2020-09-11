@@ -5,18 +5,18 @@ import thunk from "redux-thunk";
 //use messages here to display errors if they occur (like bad auth token)
 import {createMessage, returnErrors} from "./messages";
 
-import {ON_IMAGE_LOAD, LOADING_BS, UPLOAD_IMAGE} from "./types";
+import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "./types";
 
-export const imageToUpload = (img) => (dispatch, getState) => {
+export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
     dispatch({
         type: ON_IMAGE_LOAD,
-        img:img
+        img:img,
+        playlistImages:playlistImages
     });
-
 }
 
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
-const workspaceUID = 'cjsCO31iGlyyOMEpqYpI'
+const workspaceUID = 'KknIoESD5veTHuiRe8k1'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
@@ -26,15 +26,15 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
     console.log('sendToBlue!!!!')
 
     await createCanvas( dispatch, getState);
-    // dispatch(uploadImage(dispatch, getState))
     console.log('after create canvas!!!!!!!')
     uploadImage(dispatch, getState)
 };
 
-export const sendToBluePlaylist = () => (dispatch, getState) => {
+export const sendToBluePlaylist = () => async (dispatch, getState) => {
     const playlistImagesState = getState().playlist.playlistImages
     console.log('actions.sendToBluePlaylist = ', playlistImagesState)
-
+    await createCanvas( dispatch, getState);
+    console.log('sendToBluePlaylist AFTER createCanvas')
     // playlistImagesState.map((val2, i) =>  { 
     //     let selectedImage = (val2.attributes.sg_uploaded_movie_image)? (val2.attributes.sg_uploaded_movie_image.url) : val2.attributes.image
     // }
@@ -54,20 +54,20 @@ export const createCanvas = async (dispatch, getState) => {
     // console.log('actions.sendToBlue.getImageToUpload = ', getImageToUpload.source);
     // console.log('actions.sendToBlue.index.relationships.name =', index.relationships.user.data.name);
     
-    const ts = new Date().toLocaleDateString()
-    
     //date | playlist name | user
+    const ts = new Date().toLocaleDateString()
     const canvasName = ts  + ' | ' + getPlaylistNameSelected + ' | ' + getState().playlist.playlistCreatedBy
     console.log('sendToBlue:canvasName = ' + canvasName)
     
-    const rndCoord = 5000
+    let canvasContainer = calculateCanvas()
+    
     var data = JSON.stringify({
-                            "name":canvasName,
-                            "width":2000,
-                            "height":2000,
-                            'x':getRandomInt(rndCoord),
-                            'y':getRandomInt(rndCoord)
-                        });
+        "name":canvasName,
+        "width":canvasContainer.width,
+        "height":canvasContainer.height,
+        'x':canvasContainer.x,
+        'y':canvasContainer.y
+    });                        
 
     var config = {
         method: 'post',
@@ -78,23 +78,18 @@ export const createCanvas = async (dispatch, getState) => {
           },
           data : data
         };
-
         
         return axios(config)
             .then( res => {
-                let canvasUID = JSON.stringify(res.data.canvas.id)
+                canvasContainer.canvasUID = res.data.canvas.id
                 console.log('canvasUID = ' + canvasUID);
-                // console.log('sendToBlue.image = ' + getState().sendToBlue.uploadableImage.source)
-                
-                // this.setState ({"canvasUID": canvasUID}),uploadImage(getState().sendToBlue.uploadableImage.source)
 
                 dispatch({
-                    type: LOADING_BS,
-                    payload: res.data.canvas.id
+                    type: LOADING_CANVAS,
+                    payload: canvasContainer
                 });
                 console.log('actions.sendToBlue.canvasUID = ' + getState().sendToBlue.canvasUID)
                 dispatch(createMessage({tokenReset:"creating canvas"}))
-               // uploadImage()
         })
         .catch(err => {
             (err.res.status === 401) ? store.dispatch(loadUser()):''
@@ -102,18 +97,68 @@ export const createCanvas = async (dispatch, getState) => {
         });
 }
 
+//calculate x, y based on last created canvas, and then width, height from images to be stored in canvas:
+export const calculateCanvas = () => {
+    //if empty, start x,y at 0,0 then loop through images to get row/col and width/height for canvas:
+    const rndCoord = 5000
+    const cWidth = 2000;
+    const cHeight = 2000;
+
+    const container = {
+        "canvasUID":"",
+        "x":getRandomInt(rndCoord),
+        "y":getRandomInt(rndCoord),
+        "width":cWidth,
+        "height":cHeight
+    }
+
+    return container
+}
+
+/**********************
+ * i need:
+ * 1. track where previous canvas was placed, to place new canvas at canvas1.x,y + canvas1.width + padding
+ * 2. to layout images one by one based on width and height in new canvas
+ * 3. track images that have been placed, so i know what the max height for the row
+ * 4. place images on the ._x until reaching max _x or width of canvas and then go to next row, based on max image height + padding
+ * 5. rinse and repeat.
+ * 
+ * to store:
+ * 1. canvas dimensions and coordinates - use dispatch, with canvasUID
+ *      {
+ *          canvasUID:"2352453245345345",
+ *          canvasX:"234",
+ *          canvasY:"234",
+ *          canvasWidth:"234234"
+ *          canvasHeight:"234234"
+ *      }
+ * 2. store images that are placed with dimensions and coordinates - use dispatch
+ *  *  {
+ *          imgURL:"foo.com/badAssShit.png",
+ *          imgX:"234",
+ *          imgY:"234",
+ *          imgWidth:"234234",
+ *          imgHeight:"234234"
+ *      }
+ * 
+ * check store:
+ * 1. for canvas placement 
+ * 2. for image placement 
+*/
 export const uploadImage = (dispatch, getState) => {
 
     console.log("************** uploadImage.store = ", store.getState().sendToBlue)
     const sendBlueObj = store.getState().sendToBlue
-    const canvasUID = sendBlueObj.canvasUID
-    const height = sendBlueObj.height
-    const width = sendBlueObj.width
-    const imageURL = store.getState().sendToBlue.uploadableImage.source
+    const canvasUID = sendBlueObj.canvasContainer.canvasUID
+    const height = sendBlueObj.uploadableImage.height
+    const width = sendBlueObj.uploadableImage.width
+    const imageURL = sendBlueObj.uploadableImage.source
     console.log('uploadImage.canvasUID = ' + canvasUID)
     console.log('   uploadImage.sgVersion.imageURL = ', imageURL)
-    
-    const rndCoord = 5000
+
+    //5f5b039a24a5e40014af558c
+	//5f5b039a24a5e40014af558c
+    // URL: https://api.apps.us.bluescape.com/v2/workspaces/KknIoESD5veTHuiRe8k1/elements/canvas/%225f5b039a24a5e40014af558c%22/images
 
     var data = new FormData();
     data.append('url', imageURL);

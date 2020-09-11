@@ -1,23 +1,25 @@
-import {ON_IMAGE_LOAD, LOADING_BS, UPLOAD_IMAGE} from "../actions/types";
+import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "../actions/types";
 
 const initialState = {
   onImgLoad:'',
-  canvasUID:'',
-  imagePayload:''
+  canvasContainer:'',
+  imagePayload:'',
+  playlistImages:[]
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case LOADING_BS:
+    case LOADING_CANVAS:
       return {
         ...state,
-        canvasUID:action.payload
+        canvasContainer:action.payload
       };
   
     case ON_IMAGE_LOAD:
       return {
         ...state,
-        uploadableImage:action.img
+        uploadableImage:action.img,
+        playlistImages:action.playlistImages
       };
 
       case UPLOAD_IMAGE:
