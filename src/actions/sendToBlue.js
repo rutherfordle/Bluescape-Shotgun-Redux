@@ -20,6 +20,7 @@ const workspaceUID = 'KknIoESD5veTHuiRe8k1'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
+const padding = 50
 
 export const sendToBlue = (index) => async ( dispatch, getState) => {
     const getImageToUpload = getState().sendToBlue.uploadableImage;
@@ -59,7 +60,7 @@ export const createCanvas = async (dispatch, getState) => {
     const canvasName = ts  + ' | ' + getPlaylistNameSelected + ' | ' + getState().playlist.playlistCreatedBy
     console.log('sendToBlue:canvasName = ' + canvasName)
     
-    let canvasContainer = calculateCanvas()
+    let canvasContainer = calculateCanvas( getState)
     
     var data = JSON.stringify({
         "name":canvasName,
@@ -98,18 +99,24 @@ export const createCanvas = async (dispatch, getState) => {
 }
 
 //calculate x, y based on last created canvas, and then width, height from images to be stored in canvas:
-export const calculateCanvas = () => {
+export const calculateCanvas = (getState) => {
     //if empty, start x,y at 0,0 then loop through images to get row/col and width/height for canvas:
-    const rndCoord = 5000
-    const cWidth = 2000;
-    const cHeight = 2000;
-
+    
+    const cWidth = 2000
+    const cHeight = 2000
     const container = {
         "canvasUID":"",
-        "x":getRandomInt(rndCoord),
-        "y":getRandomInt(rndCoord),
+        "x":0,
+        "y":0,
         "width":cWidth,
         "height":cHeight
+    }
+
+    const canvasStore = getState().sendToBlue.canvasContainer
+    //if we find an existing canvas, use it to calculate next canvas:
+    if(canvasStore){
+        container.x = canvasStore.x + canvasStore.width + padding
+        container.y = canvasStore.y
     }
 
     return container
