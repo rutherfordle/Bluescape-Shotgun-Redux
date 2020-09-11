@@ -8,6 +8,7 @@ import {createMessage, returnErrors} from "./messages";
 import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "./types";
 
 export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
+    console.log("sendToBlue.imageToUpload")
     dispatch({
         type: ON_IMAGE_LOAD,
         img:img,
@@ -16,13 +17,17 @@ export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
 }
 
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
-const workspaceUID = 'KknIoESD5veTHuiRe8k1'
+const workspaceUID = 'hSkag79ByJZb3h88B5h7'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
-const padding = 50
+const padding = 0
+const maxColumns = 3
+let uploadAll = 0;
 
 export const sendToBlue = (index) => async ( dispatch, getState) => {
+    uploadAll = 0;
+    //get the current selected image to upload:
     const getImageToUpload = getState().sendToBlue.uploadableImage;
     console.log('sendToBlue!!!!')
 
@@ -32,6 +37,7 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
 };
 
 export const sendToBluePlaylist = () => async (dispatch, getState) => {
+    uploadAll = 1
     const playlistImagesState = getState().playlist.playlistImages
     console.log('actions.sendToBluePlaylist = ', playlistImagesState)
     await createCanvas( dispatch, getState);
@@ -39,7 +45,7 @@ export const sendToBluePlaylist = () => async (dispatch, getState) => {
     // playlistImagesState.map((val2, i) =>  { 
     //     let selectedImage = (val2.attributes.sg_uploaded_movie_image)? (val2.attributes.sg_uploaded_movie_image.url) : val2.attributes.image
     // }
-
+    uploadPlaylistImages(dispatch, getState)
     
     //loop through all the images and send them one at a time to the uploadImage function
 }
@@ -101,9 +107,56 @@ export const createCanvas = async (dispatch, getState) => {
 //calculate x, y based on last created canvas, and then width, height from images to be stored in canvas:
 export const calculateCanvas = (getState) => {
     //if empty, start x,y at 0,0 then loop through images to get row/col and width/height for canvas:
+    const canvasStore = getState().sendToBlue.canvasContainer
+    const playlistImages = getState().sendToBlue.playlistImages
+    console.log("------------------> calculateCanvas.canvasStore = ", canvasStore)
+
+    let rowCount = -1
+    let maxImgHeight = 0
+    let maxImgWidth = 0 
+    let maxCanvasHeight = 0
+    let maxCanvasWidth = 0
+    let cWidth = 0
+    let cHeight = 0
+
+    if( uploadAll){
+        playlistImages.map((img, i) => {
+        
+            console.log('img.width = ' + img.width + " | img.height = " + img.height)
+            console.log("calculateCanvas.cWidth = " + cWidth + " | cHeight = " + cHeight)
+            console.log("i = ", i)
+            
+            if( cHeight > maxImgHeight){
+                maxImgHeight = cHeight
+            }
     
-    const cWidth = 2000
-    const cHeight = 2000
+            if( cWidth > maxImgWidth){
+                maxImgWidth = cWidth
+            }
+    
+            if( i % maxColumns == 0){
+                console.log("new row")
+                cHeight += padding + img.height
+                cWidth = img.width
+                maxCanvasHeight += maxImgHeight
+                rowCount++
+            }
+            else{
+                cWidth += padding + img.width
+            }
+        })
+    }
+    else{
+        cWidth = padding + getState().sendToBlue.uploadableImage.width + padding
+        cHeight = padding + getState().sendToBlue.uploadableImage.height + padding
+    }
+
+    console.log("calculateCanvas.cWidth = " + cWidth + " | cHeight = " + cHeight)
+    console.log("calculateCanvas.maxCanvasHeight = " + maxCanvasHeight + " | maxImgWidth = " + maxImgWidth + " rowCount = " + rowCount)
+
+    //width = loop through images, calculate max width based on max columns and padding
+    //height = max height of rows
+
     const container = {
         "canvasUID":"",
         "x":0,
@@ -112,7 +165,6 @@ export const calculateCanvas = (getState) => {
         "height":cHeight
     }
 
-    const canvasStore = getState().sendToBlue.canvasContainer
     //if we find an existing canvas, use it to calculate next canvas:
     if(canvasStore){
         container.x = canvasStore.x + canvasStore.width + padding
@@ -191,6 +243,79 @@ export const uploadImage = (dispatch, getState) => {
         .catch(function (error) {
             console.log(error);
     });
+}
+
+export const uploadPlaylistImages = (dispatch, getState) => {
+
+    console.log("!!!!!!!!!!!!! uploadPlaylistImages.store = ", store.getState().sendToBlue)
+    const sendBlueObj = store.getState().sendToBlue
+    const canvasUID = sendBlueObj.canvasContainer.canvasUID
+    console.log('uploadImage.canvasUID = ' + canvasUID + " | padding = " + padding)
+    let rowCount = -1
+    let imgX = padding
+    let imgY = padding
+    let maxImgHeight = 0
+    let maxImgWidth = 0
+
+
+
+    sendBlueObj.playlistImages.map((img, i) => {
+
+        console.log("++++++++++ imgX = " + imgX + " | imgY = " + imgY)
+        console.log("       img.width = " + img.width + " | img.height = " + img.height)
+
+        if( i % maxColumns == 0){
+            console.log("new row")
+            maxImgWidth = 0;
+            imgX = padding
+            imgY += maxImgHeight + padding
+            rowCount++
+            console.log("   NEW ROW! imgX = " + imgX + " | imgY = " + imgY) 
+        }
+        else{
+            imgX += padding + img.width
+        }
+
+        
+        if( img.height > maxImgHeight){
+            maxImgHeight = img.height
+        }
+        console.log("   img.height = " + img.height + " | maxImgHeight = " + maxImgHeight)
+        
+        if( img.width > maxImgWidth){
+            maxImgWidth = img.width
+        }
+        console.log("   img.width = " + img.width + " | maxImgWidth = " + maxImgWidth)
+        console.log("-------------- > uploadPlaylistImages.imgX = " + imgX + " | imgY = " + imgY)
+
+        var data = new FormData()
+        data.append('url', img.source)
+        data.append('x', imgX)
+        data.append('y', imgY)
+
+        var config = {
+            method: 'post',
+            url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/canvas/' + canvasUID + '/images',
+            headers: { 
+                'Authorization': 'Bearer ' + accessToken, 
+                'Content-Type': 'multipart/form-data'
+            },
+            data : data
+            };
+
+            axios(config)
+                .then(function (res) {
+                    dispatch({
+                        type: UPLOAD_IMAGE,
+                        payload: res.data
+                    });
+                    console.log(JSON.stringify(res.data));
+            })
+            .catch(function (error) {
+                console.log(error);
+        });
+
+    })
 }
 
 export const getPlaylistImages = (id,name) => (dispatch, getState) => {

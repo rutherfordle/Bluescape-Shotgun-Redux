@@ -29,6 +29,7 @@ export const getPlaylist = () => (dispatch, getState) => {
 };
 
 export const getPlaylistImages = (id,name,createdBy) => (dispatch, getState) => {
+    removePlaylist(dispatch, getState)
     axios
         .get('https://bluescape.shotgunstudio.com/api/v1/entity/Version/?filter[playlists.Playlist.id]=' + id + '&fields=sg_uploaded_movie_image,cached_display_name,tags,user,image',tokenConfig(getState))
         .then(res => {

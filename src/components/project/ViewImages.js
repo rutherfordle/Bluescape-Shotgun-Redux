@@ -9,6 +9,7 @@ import store from "../../store";
 class ViewImages extends Component {
     constructor(props) {
         super(props)
+        console.log("viewImages constructor")
         this.state = {
             playlistImages: [],
         }
@@ -20,6 +21,7 @@ class ViewImages extends Component {
         width:img.naturalWidth,source:img.src}
         this.state.playlistImages.push(value)
         this.state.counter++
+        console.log("------ viewImage.onImageLoad = ", this.state.playlistImages)
     }
 
     //handle all images for playlist:
@@ -32,7 +34,6 @@ class ViewImages extends Component {
             //this.props.imageToUpload(selectedImage)
             this.processImageUpload(val2)
         })
-
         // this.props.sendToBluePlaylist()
         store.dispatch(sendToBluePlaylist())
     }
@@ -47,11 +48,13 @@ class ViewImages extends Component {
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
         const image = this.state.playlistImages.find( el => el.source == selectedImage)
 
+        console.log('processImageUpload.image = ', image)
         this.props.imageToUpload(image, this.state.playlistImages)
     }
 
     render() {
         let uploadable;
+        this.state.playlistImages = []
         if(this.props.playlistImages.length === 0) {
             uploadable = <div className="card4"> No images </div>
         }else{
