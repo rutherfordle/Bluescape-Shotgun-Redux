@@ -19,24 +19,23 @@ class Playlist extends Component {
     render() {
         let viewImages = (this.props.playlistImages)? < ViewImages />:'';
         return (
-            <div className="card card-body ">
+            <div className="card">
                 <div className="card-deck">
                     <div className="card3">
                         <h2>Playlist</h2>
                         <form id={"appInsert"}>
-                            {this.props.playlist.map((plData, i )=> (
+                            {this.props.playlist.map((plData )=> (
                                 <div className="card1" key={plData.id}>
                                     <div className="card4">
                                         {plData.attributes.code}
                                         <br />
+                                        <button
+                                            className="btn btn-primary card4 rounded-lg"
+                                            type="button"
+                                            name="index"
+                                            onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code, plData.relationships.created_by.data.name)}}
+                                        >Submit</button>
                                     </div>
-                                    <br />
-                                    <button
-                                        className="btn btn-primary card4 rounded-lg"
-                                        type="button"
-                                        name="index"
-                                        onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code, plData.relationships.created_by.data.name)}}
-                                    >Submit</button>
                                 </div>
                             ))}
                         </form>

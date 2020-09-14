@@ -8,13 +8,7 @@ body {
 .w1 {
     width:35%;
 }
-.containerCustom{
-    width: 92%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
+
 .containerCustomSendAll{
     padding-right: 15px;
     padding-left: 15px;
@@ -22,52 +16,6 @@ body {
     margin-left: auto;
     position: fixed;
     display:flex
-}
-.bg-light{
-    background-color: #5b8bbb;
-}
-.sep {
-    float: right;
-    padding-right:76px;
-}
-.lefty {
-    float: left;
-
-}
-.table1 {
-    border-collapse: separate;
-    border-spacing: 15px;
-}
-.table2 {
-    table-layout: fixed;
-    width: 100%;
-}
-
-.table2 td {
-    word-wrap: break-word;         /* All browsers since IE 5.5+ */
-    overflow-wrap: break-word;     /* Renamed property in CSS3 draft spec */
-}
-.special-card{
-    background-color:transparent;
-    padding-top:229px;
-
-}
-.form-group {
-    background-color:white;
-    border-spacing: 40px;
-    -webkit-box-shadow: -1px 1px 5px 1px rgba(194,194,194,1);
-    -moz-box-shadow: -1px 1px 5px 1px rgba(194,194,194,1);
-    box-shadow: -1px 1px 5px 1px rgba(194,194,194,1);
-    border-radius:4px;
-}
-.form-control {
-    border: 0;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-}
-#App {
-    font-family: sans-serif;
-    height: 100vh;
 }
 
 #page-wrap {
@@ -149,35 +97,6 @@ body {
     width: 30rem;
 }
 
-#page-content-wrapper {
-    min-width: 100vw;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    margin-left: 0;
-}
-
-@media (min-width: 768px) {
-    #sidebar-wrapper {
-        margin-left: 0;
-    }
-
-    #page-content-wrapper {
-        min-width: 0;
-        width: 100%;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        margin-left: -15rem;
-    }
-}
-.list-group-item {
-    border:0;
-    padding: 10px 26px;
-    text-decoration:none;
-}.list-group-item a:active{
-     font-weight:bold;
- }
 .card1{
     width:92%;
     min-height:40px;
@@ -199,64 +118,16 @@ body {
 }
 .card3 {
     width: 24%;
-    padding-left: 20px;
+    padding: 10px 0px 0px 20px;
     overflow-y: scroll;
     max-height:800px
 }
 .card4 {
     position: relative;
-    left: 10px;
+    padding: 0px 10px 0 10px;
     float: left;
+    text-align: left
 }
 .card5 {
     padding-top: 30px
 }
-.backplate {
-    background-color: #80808054;
-    padding: 20px 23px;
-}
-.corner-ribbon{
-    width: 90px;
-    background: #e43;
-    position: absolute;
-    top: 25px;
-    left: -50px;
-    text-align: center;
-    line-height: 20px;
-    letter-spacing: 1px;
-    color: #f0f0f0;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-}
-
-/* Custom styles */
-
-.corner-ribbon.shadow{
-    box-shadow: 0 0 3px rgba(0,0,0,.3);
-}
-
-/* Different positions */
-
-
-.corner-ribbon.top-right{
-    top: 93px;
-    /* right: -54px; */
-    left: 205px;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-}
-
-
-
-/* Colors */
-
-.corner-ribbon.white{background: #f0f0f0; color: #555;}
-.corner-ribbon.black{background: #333;}
-.corner-ribbon.grey{background: #999;}
-.corner-ribbon.blue{background: #39d;}
-.corner-ribbon.green{background: #2c7;}
-.corner-ribbon.turquoise{background: #1b9;}
-.corner-ribbon.purple{background: #95b;}
-.corner-ribbon.red{background: #e43;}
-.corner-ribbon.orange{background: #e82;}
-.corner-ribbon.yellow{background: #ec0;}

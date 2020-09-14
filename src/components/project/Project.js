@@ -16,12 +16,12 @@ class Project extends Component {
     render() {
 
         return (
-            <div className="card card-body">
+            <div className="card">
                 <div className="card-deck">
                     <div className="card3">
                         <h2>Projects</h2>
                         <form>
-                            {this.props.project.map((plData, i )=> (
+                            {this.props.project.map((plData)=> (
                                 <div className="card1" key={plData.id}>
                                     <div className="card4">
                                         {plData.attributes.cached_display_name}

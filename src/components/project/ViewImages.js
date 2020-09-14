@@ -29,7 +29,7 @@ class ViewImages extends Component {
         console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
         console.log('ViewImages.result.user.name= ',this.props.playlistImages[0].relationships.user.data.name)
         console.log('ViewImages.result.images= ',this.props.playlistImages[0].attributes.image)
-        this.props.playlistImages.map((val2, i) =>  { 
+        this.props.playlistImages.map((val2, i) =>  {
             //let selectedImage = (val2.attributes.sg_uploaded_movie_image)? (val2.attributes.sg_uploaded_movie_image.url) : val2.attributes.image
             //this.props.imageToUpload(selectedImage)
             this.processImageUpload(val2)
@@ -72,9 +72,9 @@ class ViewImages extends Component {
                         <img width="100%" onLoad={this.onImgLoad} src={val2.attributes.sg_uploaded_movie_image ? val2.attributes.sg_uploaded_movie_image.url: val2.attributes.image}/>
                         <br />
                         <h2>Tags:</h2>
-                        {val2.relationships.tags.data.map(val2=><React.Fragment>{val2.name}<br/></React.Fragment>)}
+                        {val2.relationships.tags.data.map((val2, j)=><React.Fragment key={j}><div>{val2.name}</div></React.Fragment>)}
                         <br />
-                        <button id="indButton" onClick={() => this.submitImageUpload(val2)} className="btn-primary" type="button" name="index" >Send image to Bluescape</button>
+                        <button id="indButton" onClick={() => this.submitImageUpload(val2)} className="btn-primary rounded-lg" type="button" name="index" >Send image to Bluescape</button>
                     </div>
                     )
                 )}
