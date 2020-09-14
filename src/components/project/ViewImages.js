@@ -73,7 +73,6 @@ class ViewImages extends Component {
                         <br />
                         <h2>Tags:</h2>
                         {val2.relationships.tags.data.map((val2, j)=><React.Fragment key={j}><div>{val2.name}</div></React.Fragment>)}
-                        <br />
                         <button id="indButton" onClick={() => this.submitImageUpload(val2)} className="btn-primary rounded-lg" type="button" name="index" >Send image to Bluescape</button>
                     </div>
                     )
