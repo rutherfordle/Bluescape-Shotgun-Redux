@@ -120,6 +120,8 @@ export const calculateCanvas = (getState) => {
     let rowHeight = 0
     let cWidth = 0
     let cHeight = 0
+    let imgX = 0
+    let imgY = 0
 
     if( uploadAll){
         let totalWidth = 0;
@@ -138,6 +140,9 @@ export const calculateCanvas = (getState) => {
             }
             console.log("img.width = " + img.width + " maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
             maxRowWidth += img.width
+            img.x = imgX
+            imgX += img.width
+            img.y = imgY
 
             //start of row here, including first row
             if( ((i+1) % maxColumns == 0) || (i == playlistImages.length-1)){
@@ -145,19 +150,24 @@ export const calculateCanvas = (getState) => {
                 console.log("*********************> new row. maxRowHeight = " + maxRowHeight + " | cHeight = " + cHeight)
                 console.log("*********************> new row. maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
                 cHeight += maxRowHeight
-                
+                imgY += maxRowHeight
+
                 if( maxRowWidth > cWidth){
                     console.log("calculate new cWidth = " + maxRowWidth + " previous cWidth = " + cWidth)
                     cWidth = maxRowWidth
                 }
                 
+                imgX = 0
                 maxRowHeight = 0
                 maxRowWidth = 0
+                
             }
 
             console.log('cHeight = ' + cHeight + ' | cWidth = ' + cWidth)
 
         })
+
+        console.log("final ", playlistImages)
 
         //add remainder of row to cHeight:
         // cHeight += rowHeight
@@ -277,6 +287,7 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
         console.log("++++++++++ imgX = " + imgX + " | imgY = " + imgY)
         console.log("       img.height = " + img.height + " | img.width = " + img.width)
+        console.log("   NEW! x = " + img.x + " | y = " + img.y)
 
         if( i % maxColumns == 0){
             console.log("new row")
@@ -304,8 +315,8 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
         var data = new FormData()
         data.append('url', img.source)
-        data.append('x', imgX)
-        data.append('y', imgY)
+        data.append('x', img.x)
+        data.append('y', img.y)
 
         var config = {
             method: 'post',
