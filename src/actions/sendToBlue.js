@@ -9,6 +9,7 @@ import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "./types";
 
 export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
     console.log("sendToBlue.imageToUpload")
+
     dispatch({
         type: ON_IMAGE_LOAD,
         img:img,
@@ -17,12 +18,12 @@ export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
 }
 
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
-const workspaceUID = 'hSkag79ByJZb3h88B5h7'
+const workspaceUID = '1D_yaBDGot5emDS2F2YB'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
 const padding = 0
-const maxColumns = 3
+const maxColumns = 4
 let uploadAll = 0;
 
 export const sendToBlue = (index) => async ( dispatch, getState) => {
@@ -112,47 +113,62 @@ export const calculateCanvas = (getState) => {
     console.log("------------------> calculateCanvas.canvasStore = ", canvasStore)
 
     let rowCount = -1
-    let maxImgHeight = 0
-    let maxImgWidth = 0 
+    let maxRowHeight = 0
+    let maxRowWidth = 0 
     let maxCanvasHeight = 0
     let maxCanvasWidth = 0
+    let rowHeight = 0
     let cWidth = 0
     let cHeight = 0
 
     if( uploadAll){
+        let totalWidth = 0;
         playlistImages.map((img, i) => {
         
-            console.log('img.width = ' + img.width + " | img.height = " + img.height)
-            console.log("calculateCanvas.cWidth = " + cWidth + " | cHeight = " + cHeight)
-            console.log("i = ", i)
-            
-            if( cHeight > maxImgHeight){
-                maxImgHeight = cHeight
+            // console.log('')
+            console.log("\ni = " + i + " playlistImages.length = " + playlistImages.length)
+            console.log('calculateCanvas.img.height = ' + img.height + ' | img.width = ' + img.width )
+            console.log("calculateCanvas.cHeight = " + cHeight + " | cWidth = " + cWidth)
+            console.log('calculateCanvas.maxRowHeight = ' + maxRowHeight + ' | maxRowWidth = ' + maxRowWidth)
+
+            console.log('img.height = ' + img.height + ' maxRowHeight = ' + maxRowHeight )
+            if( img.height > maxRowHeight){
+                maxRowHeight = img.height
+                console.log("   get new maxRowHeight = " + maxRowHeight)
             }
-    
-            if( cWidth > maxImgWidth){
-                maxImgWidth = cWidth
+            console.log("img.width = " + img.width + " maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
+            maxRowWidth += img.width
+
+            //start of row here, including first row
+            if( ((i+1) % maxColumns == 0) || (i == playlistImages.length-1)){
+                
+                console.log("*********************> new row. maxRowHeight = " + maxRowHeight + " | cHeight = " + cHeight)
+                console.log("*********************> new row. maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
+                cHeight += maxRowHeight
+                
+                if( maxRowWidth > cWidth){
+                    console.log("calculate new cWidth = " + maxRowWidth + " previous cWidth = " + cWidth)
+                    cWidth = maxRowWidth
+                }
+                
+                maxRowHeight = 0
+                maxRowWidth = 0
             }
-    
-            if( i % maxColumns == 0){
-                console.log("new row")
-                cHeight += padding + img.height
-                cWidth = img.width
-                maxCanvasHeight += maxImgHeight
-                rowCount++
-            }
-            else{
-                cWidth += padding + img.width
-            }
+
+            console.log('cHeight = ' + cHeight + ' | cWidth = ' + cWidth)
+
         })
+
+        //add remainder of row to cHeight:
+        // cHeight += rowHeight
     }
     else{
         cWidth = padding + getState().sendToBlue.uploadableImage.width + padding
         cHeight = padding + getState().sendToBlue.uploadableImage.height + padding
     }
 
-    console.log("calculateCanvas.cWidth = " + cWidth + " | cHeight = " + cHeight)
-    console.log("calculateCanvas.maxCanvasHeight = " + maxCanvasHeight + " | maxImgWidth = " + maxImgWidth + " rowCount = " + rowCount)
+    console.log("calculateCanvas.cHeight = " + cHeight + " | cWidth = " + cWidth)
+    console.log("calculateCanvas.maxRowHeight = " + maxRowHeight + " | maxRowWidth = " + maxRowWidth + " rowCount = " + rowCount)
 
     //width = loop through images, calculate max width based on max columns and padding
     //height = max height of rows
@@ -257,12 +273,10 @@ export const uploadPlaylistImages = (dispatch, getState) => {
     let maxImgHeight = 0
     let maxImgWidth = 0
 
-
-
     sendBlueObj.playlistImages.map((img, i) => {
 
         console.log("++++++++++ imgX = " + imgX + " | imgY = " + imgY)
-        console.log("       img.width = " + img.width + " | img.height = " + img.height)
+        console.log("       img.height = " + img.height + " | img.width = " + img.width)
 
         if( i % maxColumns == 0){
             console.log("new row")
