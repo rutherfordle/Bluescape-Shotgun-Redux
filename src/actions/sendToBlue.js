@@ -22,7 +22,7 @@ const workspaceUID = '1D_yaBDGot5emDS2F2YB'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDA5MjMxNTQsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE1OTk3MTM1NDQsImlhdCI6MTU5OTcxMzU1NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.WHWUZSbJyXplzeaqxT_CY4_xKkkZ8wmsR0jiDsZKJ00'
 const canvasUID = ''
-const padding = 0
+const padding = 150
 const maxColumns = 4
 let uploadAll = 0;
 
@@ -128,21 +128,23 @@ export const calculateCanvas = (getState) => {
         playlistImages.map((img, i) => {
         
             // console.log('')
+            let containerHeight = padding + img.height
+            let containerWidth = padding + img.width
             console.log("\ni = " + i + " playlistImages.length = " + playlistImages.length)
-            console.log('calculateCanvas.img.height = ' + img.height + ' | img.width = ' + img.width )
+            console.log('calculateCanvas.containerHeight = ' + containerHeight + ' | containerWidth = ' + containerWidth )
             console.log("calculateCanvas.cHeight = " + cHeight + " | cWidth = " + cWidth)
             console.log('calculateCanvas.maxRowHeight = ' + maxRowHeight + ' | maxRowWidth = ' + maxRowWidth)
 
-            console.log('img.height = ' + img.height + ' maxRowHeight = ' + maxRowHeight )
-            if( img.height > maxRowHeight){
-                maxRowHeight = img.height
+            console.log('containerHeight = ' + containerHeight + ' maxRowHeight = ' + maxRowHeight )
+            if( containerHeight > maxRowHeight){
+                maxRowHeight = containerHeight
                 console.log("   get new maxRowHeight = " + maxRowHeight)
             }
-            console.log("img.width = " + img.width + " maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
-            maxRowWidth += img.width
-            img.x = imgX
-            imgX += img.width
-            img.y = imgY
+            console.log("containerWidth = " + containerWidth + " maxRowWidth = " + maxRowWidth + " | cWidth = " + cWidth)
+            maxRowWidth += containerWidth
+            img.x = padding + imgX
+            imgX += containerWidth
+            img.y = padding + imgY
 
             //start of row here, including first row
             if( ((i+1) % maxColumns == 0) || (i == playlistImages.length-1)){
@@ -162,10 +164,11 @@ export const calculateCanvas = (getState) => {
                 maxRowWidth = 0
                 
             }
-
             console.log('cHeight = ' + cHeight + ' | cWidth = ' + cWidth)
-
         })
+
+        cHeight += padding
+        cWidth += padding
 
         console.log("final ", playlistImages)
 
@@ -285,8 +288,10 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
     sendBlueObj.playlistImages.map((img, i) => {
 
+        let containerHeight = padding + img.height
+        let containerWidth = padding + img.width
         console.log("++++++++++ imgX = " + imgX + " | imgY = " + imgY)
-        console.log("       img.height = " + img.height + " | img.width = " + img.width)
+        console.log("       containerHeight = " + containerHeight + " | containerWidth = " + containerWidth)
         console.log("   NEW! x = " + img.x + " | y = " + img.y)
 
         if( i % maxColumns == 0){
@@ -298,19 +303,20 @@ export const uploadPlaylistImages = (dispatch, getState) => {
             console.log("   NEW ROW! imgX = " + imgX + " | imgY = " + imgY) 
         }
         else{
-            imgX += padding + img.width
+            imgX += containerWidth
+
         }
 
         
-        if( img.height > maxImgHeight){
-            maxImgHeight = img.height
+        if( containerHeight > maxImgHeight){
+            maxImgHeight = containerHeight
         }
-        console.log("   img.height = " + img.height + " | maxImgHeight = " + maxImgHeight)
+        console.log("   img.height = " + containerHeight + " | maxImgHeight = " + maxImgHeight)
         
-        if( img.width > maxImgWidth){
-            maxImgWidth = img.width
+        if( containerWidth > maxImgWidth){
+            maxImgWidth = containerWidth
         }
-        console.log("   img.width = " + img.width + " | maxImgWidth = " + maxImgWidth)
+        console.log("   containerWidth = " + containerWidth + " | maxImgWidth = " + maxImgWidth)
         console.log("-------------- > uploadPlaylistImages.imgX = " + imgX + " | imgY = " + imgY)
 
         var data = new FormData()
