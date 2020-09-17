@@ -20,7 +20,6 @@ body {
 
 #page-wrap {
     text-align: center;
-    overflow: auto;
 }
 
 .bm-item {
@@ -54,6 +53,10 @@ body {
 
 .bm-cross {
     background: #bdc3c7;
+}
+
+.bm-menu-wrap {
+    top:54px !important;
 }
 
 .bm-menu {
@@ -102,7 +105,6 @@ body {
     min-height:40px;
     float:left;
     padding-bottom: 10px;
-    background-color:white;
     border-spacing: 40px;
     -webkit-box-shadow: -1px 1px 5px 1px rgba(194,194,194,1);
     -moz-box-shadow: -1px 1px 5px 1px rgba(194,194,194,1);
@@ -112,15 +114,16 @@ body {
 
 }
 .card2{
-    overflow-y: scroll;
-    max-height:800px;
-    width: 76%;
+    margin-left: 205px;
+    margin-top: 54px;
 }
 .card3 {
-    width: 24%;
-    padding: 10px 0px 0px 20px;
+    width: 205px;
+    padding: 10px 0px 0px 10px;
     overflow-y: scroll;
-    max-height:800px
+    position:fixed;
+    bottom: 0;
+    top: 54px;
 }
 .card4 {
     position: relative;

@@ -10,7 +10,7 @@ export default props => {
     }
 
     return (
-            <Menu {...props}  isOpen={ false } noOverlay >
+            <Menu width={ '100px' } isOpen={ false } noOverlay style={"top:50px"}>
             <Link to={'/'}>
                 <p className="menu-item" >Projects</p>
             </ Link>

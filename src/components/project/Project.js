@@ -16,14 +16,14 @@ class Project extends Component {
     render() {
 
         return (
-            <div className="card">
-                <div className="card-deck">
+
+                <div className="card-deck bg-light">
                     <div className="card3">
                         <h2>Projects</h2>
                         <form>
                             {this.props.project.map((plData)=> (
                                 <div className="card1" key={plData.id}>
-                                    <div className="card4">
+                                    <div className="card4 bg-light">
                                         {plData.attributes.cached_display_name}
                                         <br />
                                         <Link to={{
@@ -35,7 +35,7 @@ class Project extends Component {
                         </form>
                     </div>
                 </div>
-            </div>
+
         );
     }
 }

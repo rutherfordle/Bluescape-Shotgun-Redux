@@ -58,14 +58,14 @@ class ViewImages extends Component {
         if(this.props.playlistImages.length === 0) {
             uploadable = <div className="card4"> No images </div>
         }else{
-            uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
+            uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg mt-2" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
         }
         return(
             <div>
                 <div className="containerCustomSendAll">
                 {uploadable}
                 </div>
-                <div className="card5">
+                <div className="card5 bg-light ">
                 {this.props.playlistImages.map((val2, i) =>  (
                     <div key={i}>
                         <h2>{val2.attributes.cached_display_name}</h2>

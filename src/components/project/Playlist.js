@@ -19,8 +19,7 @@ class Playlist extends Component {
     render() {
         let viewImages = (this.props.playlistImages)? < ViewImages />:'';
         return (
-            <div className="card">
-                <div className="card-deck">
+                <div className="card-deck bg-light">
                     <div className="card3">
                         <h2>Playlist</h2>
                         <form id={"appInsert"}>
@@ -49,7 +48,6 @@ class Playlist extends Component {
                        {viewImages}
                     </div>
                 </div>
-            </div>
         );
     }
 }

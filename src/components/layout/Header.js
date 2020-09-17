@@ -35,9 +35,9 @@ export class Header extends Component {
         );
 
         return (
-            <nav className="navbar navbar-expand-sm navbar-light bg-light ">
+            <nav className="navbar navbar-expand-sm navbar-light text-white bg-secondary fixed-top ">
                 <div id="navbarTogglerDemo01">
-                    <a className="navbar-brand" href="#">
+                    <a className="navbar-brand text-white" href="#">
                         Shotgun
                     </a>
                 </div>
