@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => (
         {...rest}
         render={props => {
             if (auth.isLoading) {
-                return <h2 className="mt-2">Loading...</h2>;
+                return <h2 className="zindex-tooltip mt-4">Loading...</h2>;
             } else if (!localStorage.getItem("token")) {
                 return <Redirect to="/login" />;
             } else {

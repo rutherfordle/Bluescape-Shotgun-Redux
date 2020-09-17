@@ -28,14 +28,15 @@ export class Header extends Component {
             <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
                 <li className="nav-item">
                     <Link to="/login" className="nav-link">
-                        Login
+                        <strong className="text-primary">Login</strong>
                     </Link>
                 </li>
             </ul>
         );
 
         return (
-            <nav className="navbar navbar-expand-sm navbar-light text-white bg-secondary fixed-top">
+            <div id="header">
+            <nav className="navbar navbar-expand-sm navbar-light text-white bg-secondary fixed-top zindex-0">
                 <div id="navbarTogglerDemo01">
                     <a className="navbar-brand text-white" href="#">
                         Shotgun
@@ -57,6 +58,7 @@ export class Header extends Component {
                     {isAuthenticated ? authLinks : guestLinks}
                 </div>
             </nav>
+            </div>
         );
     }
 }

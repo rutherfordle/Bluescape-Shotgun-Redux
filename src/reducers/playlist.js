@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
         case REMOVE_PLAYLIST:
             return {
                 ...state,
-                playlistImages: 0
+                playlistImages: 0,
             };
 
         default:

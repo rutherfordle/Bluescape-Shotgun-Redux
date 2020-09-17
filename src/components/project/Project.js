@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Link from "react-router-dom/es/Link";
 import {connect} from "react-redux";
 import {getProject, getProjectPlaylist} from "../../actions/project";
+import {removePlaylist} from "../../actions/playlist"
 
 
 class Project extends Component {
@@ -43,9 +44,8 @@ class Project extends Component {
 const mapStateToProps = state => ({
     auth: state.auth,
     project: state.project.project
-
 });
 export default connect(
     mapStateToProps,
-    { getProject, getProjectPlaylist}
+    { getProject, getProjectPlaylist, removePlaylist}
 )(Project);

@@ -39,7 +39,7 @@ class Playlist extends Component {
                             ))}
                         </form>
                         <div className="container">
-                            <Link to={'/'}>
+                            <Link to={'/'}  >
                                 <p className="menu-item" >Go back to Project</p>
                             </ Link>
                         </div>

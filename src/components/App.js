@@ -15,7 +15,7 @@ import Alerts from "./layout/Alerts";
 
 const alertOptions = {
     timeout: 3000,
-    position: "bottom center",
+    position: "top center",
     offset: '30px'
 };
 
@@ -33,7 +33,7 @@ class App extends Component {
                         <div id="outer-container">
                             {sidebar}
                             <main id="page-wrap">
-                                <div class="container vh-100 bg-light col-md-8">
+                                <div className="container vh-100 bg-light col-md-8">
                                     <Switch>
                                         <PrivateRoute exact path="/" component={Project} />
                                         <PrivateRoute exact path="/playlist" component={Playlist} />

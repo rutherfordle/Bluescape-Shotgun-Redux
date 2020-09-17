@@ -2,7 +2,12 @@ html,
 body {
     margin: 0;
     background-color: #7e7c8e;
-
+}
+.fixed-top {
+    z-index: 1; !important;
+}
+#header{
+    height:30px
 }
 
 .w1 {
@@ -15,7 +20,8 @@ body {
     margin-right: auto;
     margin-left: auto;
     position: fixed;
-    display:flex
+    display:flex;
+    top: 60px;
 }
 
 #page-wrap {
