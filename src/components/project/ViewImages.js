@@ -40,6 +40,7 @@ class ViewImages extends Component {
 
     //handle all images for playlist:
     launchWorkspace = () => {
+
         // this.props.sendToBluePlaylist()
         store.dispatch(launchWorkspace())
     }
@@ -65,8 +66,8 @@ class ViewImages extends Component {
         if(this.props.playlistImages.length === 0) {
             uploadable = <div className="card4"> No images </div>
         }else{
-            uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg mt-2" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
-            launchWorkspace = <button id="appButton" onClick={() => this.launchWorkspace()} className="btn-primary rounded-lg mt-2 ml-5" type="button" name="index" value="Send to BlueScap" >Launch Workspace</button>
+            uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg mt-1" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
+            launchWorkspace = <button id="appButton" onClick={() => this.launchWorkspace()} className="btn-primary rounded-lg mt-1 ml-5" type="button" name="index" value="Send to BlueScap" >Launch Workspace</button>
 
         }
         return(

@@ -101,7 +101,7 @@ body {
 }
 
 .card1{
-    width:92%;
+    width:82%;
     min-height:40px;
     float:left;
     padding-bottom: 10px;
@@ -133,5 +133,5 @@ body {
 }
 .card5 {
     padding: 30px 0 20px 0px;
-    width:1232px
+    width:80%
 }

@@ -103,7 +103,7 @@ export const createCanvas = async (dispatch, getState) => {
                     payload: canvasContainer
                 });
                 console.log('actions.sendToBlue.canvasUID = ' + getState().sendToBlue.canvasUID)
-                dispatch(createMessage({tokenReset:"creating canvas"}))
+                dispatch(createMessage({tokenReset:"Uploading..."}))
         })
         .catch(err => {
             (err.res.status === 401) ? store.dispatch(loadUser()):''
