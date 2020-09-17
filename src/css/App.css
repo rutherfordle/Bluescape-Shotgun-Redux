@@ -3,9 +3,7 @@ body {
     margin: 0;
     background-color: #7e7c8e;
 }
-.fixed-top {
-    z-index: 1; !important;
-}
+
 #header{
     height:30px
 }
