@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import {getPlaylist, getPlaylistImages} from "../../actions/playlist";
 import {getProjectPlaylist} from "../../actions/project";
-import {sendToBlue,imageToUpload,sendToBluePlaylist} from "../../actions/sendToBlue";
+import {sendToBlue,imageToUpload,sendToBluePlaylist,launchWorkspace} from "../../actions/sendToBlue";
 import store from "../../store";
 
 
@@ -37,7 +37,13 @@ class ViewImages extends Component {
         // this.props.sendToBluePlaylist()
         store.dispatch(sendToBluePlaylist())
     }
-    
+
+    //handle all images for playlist:
+    launchWorkspace = () => {
+        // this.props.sendToBluePlaylist()
+        store.dispatch(launchWorkspace())
+    }
+
     //called for one image only:
     submitImageUpload = (index) => {
         this.processImageUpload(index)
@@ -54,16 +60,19 @@ class ViewImages extends Component {
 
     render() {
         let uploadable;
+        let launchWorkspace;
         this.state.playlistImages = []
         if(this.props.playlistImages.length === 0) {
             uploadable = <div className="card4"> No images </div>
         }else{
             uploadable = <button id="appButton" onClick={() => this.sendToBluePlaylistBroker()} className="btn-primary rounded-lg mt-2" type="button" name="index" value="Send to BlueScap" >Send all to BlueScape</button>
+            launchWorkspace = <button id="appButton" onClick={() => this.launchWorkspace()} className="btn-primary rounded-lg mt-2 ml-5" type="button" name="index" value="Send to BlueScap" >Launch Workspace</button>
+
         }
         return(
             <div>
                 <div className="containerCustomSendAll">
-                {uploadable}
+                {uploadable}{launchWorkspace}
                 </div>
                 <div className="card5 bg-light ">
                 {this.props.playlistImages.map((val2, i) =>  (
@@ -91,5 +100,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue, imageToUpload, sendToBluePlaylist}
+    { getPlaylist, getProjectPlaylist, getPlaylistImages, sendToBlue, imageToUpload, sendToBluePlaylist, launchWorkspace}
 )(ViewImages);

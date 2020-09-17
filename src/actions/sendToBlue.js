@@ -17,6 +17,7 @@ export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
     });
 }
 
+const workspaceURL = 'https://client.apps.us.bluescape.com'
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
 const workspaceUID = '1D_yaBDGot5emDS2F2YB'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
@@ -50,6 +51,11 @@ export const sendToBluePlaylist = () => async (dispatch, getState) => {
     
     //loop through all the images and send them one at a time to the uploadImage function
 }
+
+export const launchWorkspace = () => async ( dispatch, getState) => {
+    console.log('sendToBlue.launchWorkspace')
+    window.open(workspaceURL + '/' + workspaceUID, "_blank") //to open new page
+};
 
 export const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
