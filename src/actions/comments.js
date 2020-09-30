@@ -29,35 +29,3 @@ export const connectToServer = msg => {
         comment: msg
       };
 }
-
-// const mapStateToProps = state => ({
-//     count: state.count
-//   });
-  
-//   export default connect(mapStateToProps)(connectToServer);
-// connectToServer()
-
-// RETURN Comments
-// export const returnComment = (msg, status) => {
-//     return {
-//       type: RETURN_COMMENT,
-//       comment: { msg, status }
-//     };
-//   };
-  
-
-// function ChatRoomComponent(){
-//     const dispatch = useDispatch();
-
-//     useEffect(() => {
-//         socket.on('event://get-message', payload => {
-//             // update messages
-//             useDispatch({ type: UPDATE_CHAT_LOG }, payload)
-//         });
-//         socket.on('event://user-joined', payload => {
-//             // handling a new user joining to room
-//         });
-//     });
-    
-//     // other implementations
-// }
