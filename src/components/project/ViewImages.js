@@ -26,6 +26,7 @@ class ViewImages extends Component {
 
     //handle all images for playlist:
     sendToBluePlaylistBroker = () => {
+        console.log('viewImages.this.props = ', this.props)
         console.log('ViewImages.resultPlaylist= ',this.props.playlistNameSelected)
         console.log('ViewImages.result.user.name= ',this.props.playlistImages[0].relationships.user.data.name)
         console.log('ViewImages.result.images= ',this.props.playlistImages[0].attributes.image)
@@ -52,10 +53,11 @@ class ViewImages extends Component {
     }
 
     processImageUpload = (index) => {
+        // console.log('processImageUpload.index = ', index)
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
         const image = this.state.playlistImages.find( el => el.source == selectedImage)
 
-        console.log('processImageUpload.image = ', image)
+        // console.log('processImageUpload.image = ', image)
         this.props.imageToUpload(image, this.state.playlistImages)
     }
 

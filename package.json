@@ -4,7 +4,7 @@
   "description": "> Full stack Django/React/Redux app that uses token based authentication with Knox.",
   "main": "index.js",
   "scripts": {
-    "start":"npm run dev",
+    "start": "npm run dev",
     "webpack-dev-server": "webpack-dev-server",
     "dev": "webpack-dev-server --mode=development",
     "prod": "webpack --mode=production"
@@ -57,6 +57,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "thunk": "0.0.1"
+    "thunk": "0.0.1",
+    "websocket": "^1.0.32"
   }
 }

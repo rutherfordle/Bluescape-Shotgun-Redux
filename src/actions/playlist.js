@@ -8,6 +8,7 @@ import {GET_PLAYLIST, GET_PLAYLIST_IMAGES, REMOVE_PLAYLIST} from "./types";
 export const getPlaylist = () => (dispatch, getState) => {
     const getPlaylistID = getState().project.getPlaylistID;
     let playlistID = '';
+    console.log('getPlaylist.getPlaylistID = ' + getPlaylistID)
     if (getPlaylistID) {
         playlistID = 'filter[project.Project.id]='+ getPlaylistID
     }else if (!getPlaylistID || typeof getPlaylistID == 'undefined'){

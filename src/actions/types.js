@@ -15,3 +15,6 @@ export const SEND_TO_BLUE = "SEND_TO_BLUE";
 export const ON_IMAGE_LOAD = "ON_IMAGE_LOAD";
 export const LOADING_CANVAS = "LOADING_CANVAS";
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE";
+export const HANDLE_COMMENT = "HANDLE_COMMENT";
+export const RETURN_COMMENT = "RETURN_COMMENT";
+export const SOCKET_CONNECT = "SOCKET_CONNECT";

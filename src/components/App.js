@@ -8,6 +8,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import {connect} from "react-redux";
 import {Login} from "./accounts/Login";
 import { loadUser } from "../actions/auth";
+import { connectToServer } from "../actions/comments";
 import store from "../store";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
@@ -23,6 +24,8 @@ const alertOptions = {
 class App extends Component {
     componentDidMount() {
         store.dispatch(loadUser());
+        console.log("app connectToServer")
+        store.dispatch(connectToServer());
     }
     render() {
         let sidebar = this.props.isAuthenticated? <SideBar pageWrapId={"page-wrap"} />: ''
