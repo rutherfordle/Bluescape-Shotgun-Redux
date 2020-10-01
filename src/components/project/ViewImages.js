@@ -60,7 +60,9 @@ class ViewImages extends Component {
         this.state.playlistImages[imageIndex].versionID = index.id
         console.log('processImageUpload.this.state.playlistImages = ', this.state.playlistImages)
         console.log('   processImageUpload['+ imageIndex + '] = ', this.state.playlistImages[imageIndex])
+        console.log('   processImageUpload.projectID = ', store.getState().project.getPlaylistID)
         this.state.playlistImages.versionID = index.id
+        this.state.playlistImages.projectID = store.getState().project.getPlaylistID
         this.props.imageToUpload(this.state.playlistImages[imageIndex].source, this.state.playlistImages, index.id)
     }
 

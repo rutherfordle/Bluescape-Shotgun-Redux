@@ -355,7 +355,9 @@ export const uploadPlaylistImages = (dispatch, getState) => {
                         type: UPLOAD_IMAGE,
                         payload: res.data
                     });
-                    console.log('uploadPlaylistImages = ', JSON.stringify(res.data));
+                    console.log('uploadPlaylistImages = ', JSON.stringify(res.data.image.id));
+                    //store the returned imageUID to find matching comment from listener
+                    img.imageUID = res.data.image.id
             })
             .catch(function (error) {
                 console.log(error);

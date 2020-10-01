@@ -5,7 +5,8 @@ const initialState = {
   canvasContainer:'',
   imagePayload:'',
   playlistImages:[],
-  versionID:''
+  versionID:'',
+  imgSource:''
 };
 
 export default function(state = initialState, action) {
@@ -25,10 +26,10 @@ export default function(state = initialState, action) {
       };
 
       case UPLOAD_IMAGE:
-      return {
-        ...state,
-        imagePayload:action.payload
-      };
+        return {
+          ...state,
+          imagePayload:action.payload
+        };
 
     default:
       return state;
