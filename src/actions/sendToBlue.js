@@ -7,13 +7,15 @@ import {createMessage, returnErrors} from "./messages";
 
 import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "./types";
 
-export const imageToUpload = (img, playlistImages) => (dispatch, getState) => {
-    console.log("sendToBlue.imageToUpload")
+export const imageToUpload = (img, playlistImages, versionID) => (dispatch, getState) => {
+    console.log("sendToBlue.imageToUpload.playlistImages = ", playlistImages)
+    console.log("!!!!!!!!!sendToBlue.versionID = " + versionID)
 
     dispatch({
         type: ON_IMAGE_LOAD,
         img:img,
-        playlistImages:playlistImages
+        playlistImages:playlistImages,
+        versionID:versionID
     });
 }
 
@@ -21,7 +23,7 @@ const workspaceURL = 'https://client.apps.us.bluescape.com'
 const orgID = 'wOETxsWt3SAmuyUQbbLy'
 const workspaceUID = '1D_yaBDGot5emDS2F2YB'
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
-const accessToken = '<yourAccessTokenHere>'
+const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDIxODcwMjcsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE2MDA5Nzc0MTcsImlhdCI6MTYwMDk3NzQyNywiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.ZSfM9w-5oMDipezSYWgVahmZOAHIPPPlYtj9q75J43o'
 const canvasUID = ''
 const padding = 150
 const maxColumns = 4
@@ -31,7 +33,7 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
     uploadAll = 0;
     //get the current selected image to upload:
     const getImageToUpload = getState().sendToBlue.uploadableImage;
-    console.log('sendToBlue!!!!')
+    console.log('actions.sendToBlue.getImageToUpload = ', getImageToUpload)
 
     await createCanvas( dispatch, getState);
     console.log('after create canvas!!!!!!!')
@@ -41,7 +43,7 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
 export const sendToBluePlaylist = () => async (dispatch, getState) => {
     uploadAll = 1
     const playlistImagesState = getState().playlist.playlistImages
-    console.log('actions.sendToBluePlaylist = ', playlistImagesState)
+    console.log('actions.sendToBluePlaylist.playlistImagesState = ', playlistImagesState)
     await createCanvas( dispatch, getState);
     console.log('sendToBluePlaylist AFTER createCanvas')
     // playlistImagesState.map((val2, i) =>  { 
@@ -254,6 +256,8 @@ export const uploadImage = (dispatch, getState) => {
 	//5f5b039a24a5e40014af558c
     // URL: https://api.apps.us.bluescape.com/v2/workspaces/KknIoESD5veTHuiRe8k1/elements/canvas/%225f5b039a24a5e40014af558c%22/images
 
+    
+    console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().project.getPlaylistID)
     var data = new FormData();
     data.append('url', imageURL);
 
@@ -267,6 +271,7 @@ export const uploadImage = (dispatch, getState) => {
         data : data
         };
 
+        //i need what projectID and versionID for this loaded image:
         axios(config)
             .then(function (res) {
                 dispatch({
@@ -282,7 +287,7 @@ export const uploadImage = (dispatch, getState) => {
 
 export const uploadPlaylistImages = (dispatch, getState) => {
 
-    // console.log("!!!!!!!!!!!!! uploadPlaylistImages.store = ", store.getState().sendToBlue)
+    console.log("!!!!!!!!!!!!! uploadPlaylistImages.store = ", store.getState().sendToBlue)
     const sendBlueObj = store.getState().sendToBlue
     const canvasUID = sendBlueObj.canvasContainer.canvasUID
     // console.log('uploadImage.canvasUID = ' + canvasUID + " | padding = " + padding)
@@ -294,6 +299,10 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
     sendBlueObj.playlistImages.map((img, i) => {
 
+        let versionID = img.versionID
+        console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().project.getPlaylistID)
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@ uploadPlaylistImages.img.versionID = ', versionID)
+        
         let containerHeight = padding + img.height
         let containerWidth = padding + img.width
         // console.log("++++++++++ imgX = " + imgX + " | imgY = " + imgY)
@@ -346,7 +355,7 @@ export const uploadPlaylistImages = (dispatch, getState) => {
                         type: UPLOAD_IMAGE,
                         payload: res.data
                     });
-                    console.log(JSON.stringify(res.data));
+                    console.log('uploadPlaylistImages = ', JSON.stringify(res.data));
             })
             .catch(function (error) {
                 console.log(error);
@@ -356,9 +365,13 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 }
 
 export const getPlaylistImages = (id,name) => (dispatch, getState) => {
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~getPlaylistImages.id = ", id)
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~getPlaylistImages.name = ", name)
     axios
         .get('https://bluescape.shotgunstudio.com/api/v1/entity/Version/?filter[playlists.Playlist.id]=' + id + '&fields=sg_uploaded_movie_image,cached_display_name,tags,user,image',tokenConfig(getState))
         .then(res => {
+            console.log("getPlaylistImages.res.data = ", res.data)
+            console.log("getPlaylistImages.id = ", id)
             dispatch({
                 type: GET_PLAYLIST_IMAGES,
                 payload: res.data.data,

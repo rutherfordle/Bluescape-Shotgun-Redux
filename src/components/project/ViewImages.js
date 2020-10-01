@@ -53,12 +53,15 @@ class ViewImages extends Component {
     }
 
     processImageUpload = (index) => {
-        // console.log('processImageUpload.index = ', index)
+        console.log('=======> processImageUpload.index = ', index)
+        console.log('   id = ' + index.id)
         const selectedImage = (index.attributes.sg_uploaded_movie_image)? (index.attributes.sg_uploaded_movie_image.url) : index.attributes.image
-        const image = this.state.playlistImages.find( el => el.source == selectedImage)
-
-        // console.log('processImageUpload.image = ', image)
-        this.props.imageToUpload(image, this.state.playlistImages)
+        const imageIndex = this.state.playlistImages.findIndex( el => el.source == selectedImage)
+        this.state.playlistImages[imageIndex].versionID = index.id
+        console.log('processImageUpload.this.state.playlistImages = ', this.state.playlistImages)
+        console.log('   processImageUpload['+ imageIndex + '] = ', this.state.playlistImages[imageIndex])
+        this.state.playlistImages.versionID = index.id
+        this.props.imageToUpload(this.state.playlistImages[imageIndex].source, this.state.playlistImages, index.id)
     }
 
     render() {
@@ -98,7 +101,7 @@ class ViewImages extends Component {
 const mapStateToProps = state => ({
     auth: state.auth,
     playlistImages: state.playlist.playlistImages,
-    playlistNameSelected: state.playlist.playlistNameSelected
+    playlistNameSelected: state.playlist.playlistNameSelected,
 });
 
 export default connect(

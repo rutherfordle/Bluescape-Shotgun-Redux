@@ -20,6 +20,7 @@ export const getProject = () => (dispatch, getState) => {
 };
 
 export const getProjectPlaylist = (playlistID) => (dispatch) => {
+    console.log('getProjectPlaylist.playlistID = ', playlistID)
     dispatch({type: PLAYLIST_SELECT,
     payload: playlistID});
 }

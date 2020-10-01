@@ -21,7 +21,24 @@ export const connectToServer = msg => {
 
     client.onmessage = (message) => {
         // const dataFromServer = JSON.parse(message.data);
-        console.log('comments.onmessage.message = ', message.data);
+        let data = JSON.parse(message.data)
+        let comment = data.text
+        let user = data.name
+        console.log('comments.onmessage.comment = ', comment + " | " + user);
+
+        //dispatch new comment and send it to shotgun
+        // axios
+        // .get("https://bluescape.shotgunstudio.com/api/v1/entity/projects?fields=cached_display_name",tokenConfig(getState))
+        // .then(res => {
+        //     dispatch({
+        //         type: GET_PROJECT,
+        //         payload: res.data.data
+        //     });
+        // })
+        // .catch(err => {
+        //     (err.response.status === 401) ? store.dispatch(loadUser()):''
+        //     dispatch(createMessage({tokenReset:"Resetting token, please try again"}))
+        // });
     };
 
     return {
