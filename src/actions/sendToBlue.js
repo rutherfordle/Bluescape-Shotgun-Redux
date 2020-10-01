@@ -260,6 +260,8 @@ export const uploadImage = (dispatch, getState) => {
     console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().project.getPlaylistID)
     var data = new FormData();
     data.append('url', imageURL);
+    data.append('x', padding)
+    data.append('y', padding)
 
     var config = {
         method: 'post',
