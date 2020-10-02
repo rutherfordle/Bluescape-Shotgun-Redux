@@ -38,7 +38,13 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
     await createCanvas( dispatch, getState);
     console.log('after create canvas!!!!!!!')
     uploadImage(dispatch, getState)
+    testFunction(123,123,123)
+    setTraitData(123,123,123)
 };
+
+export const testFunction = (imgUID, projectID, versionID) => {
+    console.log("+++++++++++++++++++++++++++++ test fun!!!!" + imgUID + " | " + projectID + " | " +versionID)
+}
 
 export const sendToBluePlaylist = () => async (dispatch, getState) => {
     uploadAll = 1
@@ -54,7 +60,7 @@ export const sendToBluePlaylist = () => async (dispatch, getState) => {
     //loop through all the images and send them one at a time to the uploadImage function
 }
 
-export const launchWorkspace = () => async ( dispatch, getState) => {
+export const launchWorkspace = () => ( dispatch, getState) => {
     console.log('sendToBlue.launchWorkspace')
     window.open(workspaceURL + '/' + workspaceUID, "_blank") //to open new page
 };
@@ -289,7 +295,7 @@ export const uploadImage = (dispatch, getState) => {
 
 export const uploadPlaylistImages = (dispatch, getState) => {
 
-    console.log("!!!!!!!!!!!!! uploadPlaylistImages.store = ", store.getState().sendToBlue)
+    console.log("----------------> uploadPlaylistImages.store = ", store.getState().sendToBlue)
     const sendBlueObj = store.getState().sendToBlue
     const canvasUID = sendBlueObj.canvasContainer.canvasUID
     // console.log('uploadImage.canvasUID = ' + canvasUID + " | padding = " + padding)
@@ -302,7 +308,8 @@ export const uploadPlaylistImages = (dispatch, getState) => {
     sendBlueObj.playlistImages.map((img, i) => {
 
         let versionID = img.versionID
-        console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().project.getPlaylistID)
+        let projectID = store.getState().project.getPlaylistID
+        console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', projectID)
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@ uploadPlaylistImages.img.versionID = ', versionID)
         
         let containerHeight = padding + img.height
@@ -349,8 +356,9 @@ export const uploadPlaylistImages = (dispatch, getState) => {
                 'Content-Type': 'multipart/form-data'
             },
             data : data
-            };
+        };
 
+        console.log('where is this call??????')
             axios(config)
                 .then(function (res) {
                     dispatch({
@@ -360,12 +368,46 @@ export const uploadPlaylistImages = (dispatch, getState) => {
                     console.log('uploadPlaylistImages = ', JSON.stringify(res.data.image.id));
                     //store the returned imageUID to find matching comment from listener
                     img.imageUID = res.data.image.id
+                    setTraitData( res.data.image.id, projectID, versionID )
             })
             .catch(function (error) {
                 console.log(error);
         });
 
     })
+}
+
+export const setTraitData = (imgUID, projectID, versionID) => {
+        
+    console.log('setTraitData.imgUID = ' + imgUID + ' | projectID = ' + ' | versionID =' + versionID)
+    var data = JSON.stringify([{"http://www.bluescape.com/projectID":projectID,"http://www.bluescape.com/versionID":versionID}]);
+
+    var config = {
+        method: 'post',
+        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/images/' + imgUID + '/traits',
+        headers: { 
+            'Authorization': 'Bearer ' + accessToken, 
+            'Content-Type': 'application/json',
+        },
+        data : data
+    };
+
+    axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            console.log(error);
+            console.log("****** trait fail.imgUID = ", imgUID)
+
+            setTimeout(() => {
+                console.log("timeout complete: imgUID = " + imgUID)
+                setTraitData( imgUID, projectID, versionID)
+            }, 1000);
+
+            // dispatch(createMessage({tokenReset:"error uploading image, please try again"}))
+        });
+
 }
 
 export const getPlaylistImages = (id,name) => (dispatch, getState) => {
