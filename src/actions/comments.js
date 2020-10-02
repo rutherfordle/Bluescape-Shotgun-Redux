@@ -40,7 +40,7 @@ export const connectToServer = (msg) => (dispatch, getState) => {
     client.onmessage = (message) => {
         // const dataFromServer = JSON.parse(message.data);
         let msg = JSON.parse(message.data)
-        comment = msg.text
+        comment = msg.text.replace(/&quot;/g, '"').replace(/&#39;/g, "'")
         let user = msg.name
         let imgUID = msg.target.id
         console.log('comments.onmessage.comment = ', comment + ' | ' + user + ' | UID = ' + imgUID);
@@ -104,7 +104,7 @@ export const sendComment = (dispatch, getState) => {
     //console.log('http://www.bluescape.com/projectID = ', traitObj.http://www.bluescape.com/projectID )
 
     //check if shotgun command is sent from comment:
-    let splitComment = comment.split("/shotgun comment ");
+    let splitComment = comment.split("/shotgun note ");
     console.log('onComment.splitComment = ', splitComment)
     //console.log('onComment.comment = ' + decode(comment))
     if( (splitComment.length > 1) && (splitComment[0]== '')){
