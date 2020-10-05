@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import {createMessage, returnErrors} from "./messages";
 
 import {ON_IMAGE_LOAD, LOADING_CANVAS, UPLOAD_IMAGE} from "./types";
+import project from "../reducers/project";
 
 export const imageToUpload = (img, playlistImages, versionID) => (dispatch, getState) => {
     console.log("sendToBlue.imageToUpload.playlistImages = ", playlistImages)
@@ -38,13 +39,8 @@ export const sendToBlue = (index) => async ( dispatch, getState) => {
     await createCanvas( dispatch, getState);
     console.log('after create canvas!!!!!!!')
     uploadImage(dispatch, getState)
-    testFunction(123,123,123)
-    setTraitData(123,123,123)
+    //setTraitData(123,123,123)
 };
-
-export const testFunction = (imgUID, projectID, versionID) => {
-    console.log("+++++++++++++++++++++++++++++ test fun!!!!" + imgUID + " | " + projectID + " | " +versionID)
-}
 
 export const sendToBluePlaylist = () => async (dispatch, getState) => {
     uploadAll = 1
@@ -255,6 +251,7 @@ export const uploadImage = (dispatch, getState) => {
     const height = sendBlueObj.uploadableImage.height
     const width = sendBlueObj.uploadableImage.width
     const imageURL = sendBlueObj.uploadableImage.source
+    sendBlueObj.tryCount = 0
     console.log('uploadImage.canvasUID = ' + canvasUID)
     console.log('   uploadImage.sgVersion.imageURL = ', imageURL)
 
@@ -286,7 +283,10 @@ export const uploadImage = (dispatch, getState) => {
                     type: UPLOAD_IMAGE,
                     payload: res.data
                 });
-                console.log(JSON.stringify(res.data));
+                console.log(JSON.stringify(res.data));                    
+                //store the returned imageUID to find matching comment from listener
+                sendBlueObj.imageUID = res.data.image.id
+                setTraitData( sendBlueObj )
         })
         .catch(function (error) {
             console.log(error);
@@ -309,6 +309,8 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
         let versionID = img.versionID
         let projectID = store.getState().project.getPlaylistID
+        img.projectID = projectID
+        img.tryCount = 0
         console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', projectID)
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@ uploadPlaylistImages.img.versionID = ', versionID)
         
@@ -358,7 +360,6 @@ export const uploadPlaylistImages = (dispatch, getState) => {
             data : data
         };
 
-        console.log('where is this call??????')
             axios(config)
                 .then(function (res) {
                     dispatch({
@@ -368,7 +369,7 @@ export const uploadPlaylistImages = (dispatch, getState) => {
                     console.log('uploadPlaylistImages = ', JSON.stringify(res.data.image.id));
                     //store the returned imageUID to find matching comment from listener
                     img.imageUID = res.data.image.id
-                    setTraitData( res.data.image.id, projectID, versionID )
+                    setTraitData( img )
             })
             .catch(function (error) {
                 console.log(error);
@@ -376,15 +377,15 @@ export const uploadPlaylistImages = (dispatch, getState) => {
 
     })
 }
-
-export const setTraitData = (imgUID, projectID, versionID) => {
-        
-    console.log('setTraitData.imgUID = ' + imgUID + ' | projectID = ' + ' | versionID =' + versionID)
-    var data = JSON.stringify([{"http://www.bluescape.com/projectID":projectID,"http://www.bluescape.com/versionID":versionID}]);
+const maxTry = 5
+export const setTraitData = (imgObject) => {
+    
+    console.log('-----> setTraitData.imgUID = ' + imgObject.imageUID + ' | projectID = ' + imgObject.projectID + ' | versionID =' + imgObject.versionID)
+    var data = JSON.stringify([{"http://www.bluescape.com/projectID":imgObject.projectID,"http://www.bluescape.com/versionID":imgObject.versionID}]);
 
     var config = {
         method: 'post',
-        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/images/' + imgUID + '/traits',
+        url: 'https://api.apps.us.bluescape.com/v2/workspaces/' + workspaceUID + '/elements/images/' + imgObject.imageUID + '/traits',
         headers: { 
             'Authorization': 'Bearer ' + accessToken, 
             'Content-Type': 'application/json',
@@ -395,16 +396,18 @@ export const setTraitData = (imgUID, projectID, versionID) => {
     axios(config)
         .then(function (response) {
             console.log(JSON.stringify(response.data));
+            imgObject.tryCount = 0
         })
         .catch(function (error) {
             console.log(error);
-            console.log("****** trait fail.imgUID = ", imgUID)
-
-            setTimeout(() => {
-                console.log("timeout complete: imgUID = " + imgUID)
-                setTraitData( imgUID, projectID, versionID)
-            }, 1000);
-
+            console.log("****** trait fail.imgUID = " + imgObject.imageUID + " | tryCount = " + imgObject.tryCount)
+            if( imgObject.tryCount < maxTry){
+                imgObject.tryCount++
+                setTimeout(() => {
+                    console.log("timeout complete: imgUID = " + imgObject.imageUID)
+                        setTraitData( imgObject)
+                }, 1000);
+            }
             // dispatch(createMessage({tokenReset:"error uploading image, please try again"}))
         });
 
