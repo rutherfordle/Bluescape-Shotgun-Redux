@@ -326,13 +326,11 @@ export const uploadPlaylistImages = (dispatch, getState) => {
             imgX = padding
             imgY += maxImgHeight + padding
             rowCount++
-            // console.log("   NEW ROW! imgX = " + imgX + " | imgY = " + imgY) 
         }
         else{
             imgX += containerWidth
 
         }
-
         
         if( containerHeight > maxImgHeight){
             maxImgHeight = containerHeight
@@ -374,7 +372,6 @@ export const uploadPlaylistImages = (dispatch, getState) => {
             .catch(function (error) {
                 console.log(error);
         });
-
     })
 }
 const maxTry = 5
@@ -400,8 +397,9 @@ export const setTraitData = (imgObject) => {
         })
         .catch(function (error) {
             console.log(error);
-            console.log("****** trait fail.imgUID = " + imgObject.imageUID + " | tryCount = " + imgObject.tryCount)
-            if( imgObject.tryCount < maxTry){
+            console.log("****** trait fail.imgUID = " + imgObject.imageUID + " | tryCount = " + imgObject.tryCount + " | error.status = " + error.response.status)
+            //workaround for trying to set trait on an image that is not yet processed (404) retry maxTry times to make sure it has time to load:
+            if( ( imgObject.tryCount < maxTry) && (error.response.status == 404)){
                 imgObject.tryCount++
                 setTimeout(() => {
                     console.log("timeout complete: imgUID = " + imgObject.imageUID)
@@ -410,7 +408,6 @@ export const setTraitData = (imgObject) => {
             }
             // dispatch(createMessage({tokenReset:"error uploading image, please try again"}))
         });
-
 }
 
 export const getPlaylistImages = (id,name) => (dispatch, getState) => {

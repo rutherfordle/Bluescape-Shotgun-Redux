@@ -27,11 +27,9 @@ export const connectToServer = (msg) => (dispatch, getState) => {
         console.log('WebSocket Client Connected');
     };
 
-
     client.onclose = function() {
         console.log('echo-protocol Client Closed');
     };
-
 
     client.onerror = function() {
         console.log('Connection Error');
@@ -40,6 +38,7 @@ export const connectToServer = (msg) => (dispatch, getState) => {
     client.onmessage = (message) => {
         // const dataFromServer = JSON.parse(message.data);
         let msg = JSON.parse(message.data)
+        //find special chars and convert html quote and single quote to human readable:
         comment = msg.text.replace(/&quot;/g, '"').replace(/&#39;/g, "'")
         let user = msg.name
         let imgUID = msg.target.id
@@ -96,8 +95,9 @@ export const getTraits = (imgUID, comment) => {
 }
 
 export const sendComment = (dispatch, getState) => {
-    const traitObj = traitsResponse.traits[0]
+    const traitObj = traitsResponse.traits[ traitsResponse.traits.length - 1]
     console.log('sendComment.traits = ', traitObj)
+    //evaluate string to key:
     let projectID = traitObj['http://www.bluescape.com/projectID']
     let versionID = traitObj['http://www.bluescape.com/versionID']
     console.log('projectID = ' + projectID + ' | versionID = ' + versionID)

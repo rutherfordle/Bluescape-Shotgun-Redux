@@ -5,6 +5,7 @@ import playlist from "./playlist"
 import errors from "./errors"
 import messages from "./messages"
 import sendToBlue from "./sendToBlue"
+import comments from "./comments"
 
 export default combineReducers({
     auth,
@@ -12,5 +13,6 @@ export default combineReducers({
     playlist,
     errors,
     messages,
-    sendToBlue
+    sendToBlue,
+    comments
 });
