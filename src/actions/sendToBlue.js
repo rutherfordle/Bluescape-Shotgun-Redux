@@ -23,10 +23,10 @@ export const imageToUpload = (img, playlistImages, versionID) => (dispatch, getS
 }
 
 const workspaceURL = 'https://client.apps.us.bluescape.com'
-const orgID = 'wOETxsWt3SAmuyUQbbLy'
-const workspaceUID = '1D_yaBDGot5emDS2F2YB'
+const orgID = ''
+const workspaceUID = ''
 // const workspaceUID = 'L8V-DgUmfe8n2dYMwPpj'
-const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiVVNFUiIsInN1YiI6IkJDMGkwd3paNUNhcGg3aTg3MUthIiwic3BpZCI6NTI3LCJhdWQiOlsiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5YmY4YyIsIjZjNDM3MjIzZTNiMDk2MmMzMWYyOWU3OWYwYmZkYTI5ZWExYTY4OWMiLCIzNmY4Y2Y1MTc1ZTRmYWFhNGYwNjcxODQwNGI3ZGY5NGRkYzBkOGFlIiwiMDE1ZjQ4MWFjZmU0MDJjOWJhZTQzNTM4OWVmYmI2OTE0OTI5Y2U5ZCJdLCJleHAiOjE2MDIxODcwMjcsImF6cCI6Ijc0YjkwYTYwIiwic2NvcGVzIjpbInVzZXIiXSwiYXBwX2F1dGhvcml6YXRpb25faWQiOjE0MTUzLCJuYmYiOjE2MDA5Nzc0MTcsImlhdCI6MTYwMDk3NzQyNywiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS1hcGkuYXBwcy51cy5ibHVlc2NhcGUuY29tIn0.ZSfM9w-5oMDipezSYWgVahmZOAHIPPPlYtj9q75J43o'
+const accessToken = ''
 const canvasUID = ''
 const padding = 150
 const maxColumns = 4
