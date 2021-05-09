@@ -1,6 +1,6 @@
 import axios from "axios";
 import {tokenConfig,loadUser} from "./auth"
-import {GET_PROJECT, PLAYLIST_SELECT} from "./types";
+import {GET_PROJECT, ON_IMAGE_LOAD, PLAYLIST_SELECT} from "./types";
 import {createMessage, returnErrors} from "./messages";
 import store from "../store";
 
@@ -19,8 +19,8 @@ export const getProject = () => (dispatch, getState) => {
         });
 };
 
-export const getProjectPlaylist = (playlistID) => (dispatch) => {
-    console.log('getProjectPlaylist.playlistID = ', playlistID)
-    dispatch({type: PLAYLIST_SELECT,
-    payload: playlistID});
+export const getProjectPlaylist = (projectID) => (dispatch) => {
+    console.log('getProjectPlaylist.playlistID = ', projectID)
+    dispatch({type: ON_IMAGE_LOAD,
+    projectID: projectID});
 }

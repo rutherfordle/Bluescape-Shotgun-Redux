@@ -23,7 +23,7 @@ class Playlist extends Component {
                     <div className="card3">
                         <h2>Playlist</h2>
                         <form id={"appInsert"}>
-                            {this.props.playlist.map((plData )=> (
+                            {this.props.playlist.map((plData, i )=> (
                                 <div className="card1" key={plData.id}>
                                     <div className="card4">
                                         {plData.attributes.code}
@@ -32,7 +32,7 @@ class Playlist extends Component {
                                             className="btn btn-primary card4 rounded-lg"
                                             type="button"
                                             name="index"
-                                            onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code, plData.relationships.created_by.data.name)}}
+                                            onClick={()=>{this.props.getPlaylistImages(plData.id, plData.attributes.code, plData.relationships.created_by.data.name, i)}}
                                         >Submit</button>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ import Playlist from "./project/Playlist";
 import PrivateRoute from "./common/PrivateRoute";
 import {connect} from "react-redux";
 import {Login} from "./accounts/Login";
+import {LoginBluescape} from "./accounts/LoginBluescape";
 import { loadUser } from "../actions/auth";
 import { connectToServer } from "../actions/comments";
 import store from "../store";
@@ -41,6 +42,7 @@ class App extends Component {
                                     <Switch>
                                         <PrivateRoute exact path="/" component={Project} />
                                         <PrivateRoute exact path="/playlist" component={Playlist} />
+                                        <PrivateRoute exact path="/loginBluescape" component={LoginBluescape} />
                                         <Route exact path="/login" component={Login} />
                                     </Switch>
                                 </div>

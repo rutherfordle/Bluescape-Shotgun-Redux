@@ -11,12 +11,14 @@ import project from "../reducers/project";
 export const imageToUpload = (img, playlistImages, versionID) => (dispatch, getState) => {
     console.log("sendToBlue.imageToUpload.playlistImages = ", playlistImages)
     console.log("!!!!!!!!!sendToBlue.versionID = " + versionID)
-
+    let playlistIteratorID = getState().playlist.playlistIterator;
+    let projectID = getState().playlist.playlist[playlistIteratorID].relationships.project.data.id;
     dispatch({
         type: ON_IMAGE_LOAD,
         img:img,
         playlistImages:playlistImages,
-        versionID:versionID
+        versionID:versionID,
+        projectID:projectID
     });
 }
 
@@ -66,7 +68,7 @@ export const getRandomInt = (max) => {
 }
 
 export const createCanvas = async (dispatch, getState) => {
-    console.log('createCanvas.getPlaylistID = ' + getState().project.getPlaylistID)
+    console.log('createCanvas.projectID = ' + getState().sendToBlue.projectID)
     const getPlaylistNameSelected = getState().playlist.playlistNameSelected;
     console.log('actions.sendToBlue.getPlaylistNameSelected = ', getPlaylistNameSelected);
     // console.log('actions.sendToBlue.getImageToUpload = ', getImageToUpload.source);
@@ -260,7 +262,7 @@ export const uploadImage = (dispatch, getState) => {
     // URL: https://api.apps.us.bluescape.com/v2/workspaces/KknIoESD5veTHuiRe8k1/elements/canvas/%225f5b039a24a5e40014af558c%22/images
 
     
-    console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().project.getPlaylistID)
+    console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', store.getState().sendToBlue.projectID)
     var data = new FormData();
     data.append('url', imageURL);
     data.append('x', padding)
@@ -308,7 +310,7 @@ export const uploadPlaylistImages = (dispatch, getState) => {
     sendBlueObj.playlistImages.map((img, i) => {
 
         let versionID = img.versionID
-        let projectID = store.getState().project.getPlaylistID
+        let projectID = store.getState().sendToBlue.projectID
         img.projectID = projectID
         img.tryCount = 0
         console.log('@@@@@@@@@@@@@@@@@ uploadImage.projectID = ', projectID)

@@ -6,7 +6,8 @@ const initialState = {
     playlist: [],
     playlistImages: [],
     playlistNameSelected:'',
-    playlistCreatedBy:''
+    playlistCreatedBy:'',
+    playlistIterator:''
 };
 
 export default function (state = initialState, action) {
@@ -21,7 +22,8 @@ export default function (state = initialState, action) {
                 ...state,
                 playlistImages: action.payload,
                 playlistNameSelected:action.name,
-                playlistCreatedBy:action.createdBy
+                playlistCreatedBy:action.createdBy,
+                playlistIterator:action.playlistIterator
             };
         case REMOVE_PLAYLIST:
             return {
